@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposition IA - Air Tahiti Nui x PACIFIK'AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #2CCCD4;
+            --teal-dark: #1aa3aa;
+            --gold: #C9A84C;
+            --navy: #003366;
+            --orange: #FF6B00;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray: #E5E5E5;
+            --text: #1A1A1A;
+            --text-light: #666666;
+            --success: #10B981;
+            --gradient-teal: linear-gradient(135deg, #2CCCD4 0%, #1aa3aa 100%);
+            --gradient-gold: linear-gradient(135deg, #C9A84C 0%, #B8943D 100%);
+            --gradient-navy: linear-gradient(135deg, #003366 0%, #004d99 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--gray-light);
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient-navy);
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-logos img {
+            height: 50px;
+        }
+
+        .header-logos .separator {
+            color: rgba(255,255,255,0.3);
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .header-badge {
+            background: var(--gradient-gold);
+            color: var(--navy);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-teal);
+            padding: 80px 60px;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 22px;
+            font-weight: 300;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 56px;
+            font-weight: 700;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero-stat-label {
+            font-size: 16px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Base */
+        .section {
+            padding: 80px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 18px;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ROI Section */
+        .roi-section {
+            background: var(--white);
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .roi-card {
+            background: var(--gray-light);
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .roi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: var(--teal);
+        }
+
+        .roi-card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+
+        .roi-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--teal-dark);
+            margin-bottom: 5px;
+        }
+
+        .roi-card-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .roi-card-detail {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray);
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Workflows Section */
+        .workflows-section {
+            background: var(--gray-light);
+        }
+
+        .workflows-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-tag.service { background: #DBEAFE; color: #1E40AF; }
+        .category-tag.marketing { background: #D1FAE5; color: #065F46; }
+        .category-tag.operations { background: #FEF3C7; color: #92400E; }
+        .category-tag.revenue { background: #FCE7F3; color: #9D174D; }
+        .category-tag.dashboard { background: #E0E7FF; color: #3730A3; }
+
+        .workflows-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .workflow-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--teal);
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .workflow-card.service { border-left-color: #3B82F6; }
+        .workflow-card.marketing { border-left-color: #10B981; }
+        .workflow-card.operations { border-left-color: #F59E0B; }
+        .workflow-card.revenue { border-left-color: #EC4899; }
+        .workflow-card.dashboard { border-left-color: #6366F1; }
+
+        .workflow-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .workflow-number {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .workflow-card.service .workflow-number { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); }
+        .workflow-card.marketing .workflow-number { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        .workflow-card.operations .workflow-number { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+        .workflow-card.revenue .workflow-number { background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); }
+        .workflow-card.dashboard .workflow-number { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); }
+
+        .workflow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .workflow-description {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .workflow-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .workflow-feature {
+            background: var(--gray-light);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Dashboard Preview */
+        .dashboard-section {
+            background: var(--white);
+        }
+
+        .dashboard-preview {
+            background: var(--navy);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        }
+
+        .dashboard-browser {
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .dashboard-browser-bar {
+            background: #2d2d44;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .browser-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-dot.red { background: #ff5f56; }
+        .browser-dot.yellow { background: #ffbd2e; }
+        .browser-dot.green { background: #27ca40; }
+
+        .browser-url {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 6px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            margin-left: 20px;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+            min-height: 400px;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 25px;
+        }
+
+        .dashboard-sidebar {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .sidebar-item {
+            padding: 12px 15px;
+            color: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item.active {
+            background: var(--teal);
+            color: var(--white);
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .dashboard-card.wide {
+            grid-column: span 2;
+        }
+
+        .dashboard-card h4 {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card .value {
+            color: var(--white);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .dashboard-card .value.teal { color: var(--teal); }
+        .dashboard-card .value.gold { color: var(--gold); }
+        .dashboard-card .value.success { color: var(--success); }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: var(--gradient-navy);
+            color: var(--white);
+        }
+
+        .pricing-section .section-title {
+            color: var(--white);
+        }
+
+        .pricing-section .section-subtitle {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 40px 35px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.recommended {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.recommended:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-gold);
+            color: var(--navy);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pricing-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .pricing-description {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .pricing-price {
+            margin-bottom: 30px;
+        }
+
+        .pricing-amount {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .pricing-currency {
+            font-size: 20px;
+            vertical-align: super;
+        }
+
+        .pricing-period {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        .pricing-features {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .pricing-feature {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .pricing-feature:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-feature .check {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .pricing-cta {
+            display: block;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-cta.primary {
+            background: var(--gradient-gold);
+            color: var(--navy);
+        }
+
+        .pricing-cta.secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: var(--white);
+        }
+
+        .pricing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            background: var(--white);
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: var(--gray);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .timeline-dot {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-teal);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 5px 20px rgba(44,204,212,0.4);
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+
+        .timeline-description {
+            color: var(--text-light);
+            font-size: 14px;
+            max-width: 180px;
+            margin: 0 auto;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-teal);
+            text-align: center;
+            padding: 80px 60px;
+            color: var(--white);
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .cta-btn {
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn.primary {
+            background: var(--white);
+            color: var(--teal-dark);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--navy);
+            color: rgba(255,255,255,0.6);
+            padding: 40px 60px;
+            text-align: center;
+        }
+
+        .footer-contact {
+            margin-bottom: 20px;
+        }
+
+        .footer-contact a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-legal {
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .workflows-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header {
+                padding: 20px 30px;
+            }
+
+            .hero {
+                padding: 60px 30px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 30px;
+            }
+
+            .section {
+                padding: 60px 30px;
+            }
+
+            .roi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .workflows-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.recommended {
+                transform: none;
+            }
+
+            .timeline {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .timeline::before {
+                display: none;
+            }
+
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-sidebar {
+                display: none;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .footer, .cta-section {
+                background: var(--navy) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .hero {
+                background: var(--teal) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logos">
+            <img src="https://www.airtahitinui.com/sites/default/files/logo.svg" alt="Air Tahiti Nui">
+            <span class="separator">x</span>
+            <img src="https://i.ibb.co/YBStKgFC/logo-pacifikai-white.png" alt="PACIFIK'AI" style="height: 40px;">
+        </div>
+        <span class="header-badge">Proposition Exclusive</span>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Transformation IA de votre E-Marketing</h1>
+            <p>15 agents IA autonomes pour automatiser votre marketing digital, personnaliser l'experience client et maximiser votre ROI.</p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">15</span>
+                    <span class="hero-stat-label">Workflows IA</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">35M</span>
+                    <span class="hero-stat-label">XPF Economies/an</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">24/7</span>
+                    <span class="hero-stat-label">Disponibilite</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">5</span>
+                    <span class="hero-stat-label">Langues</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Section -->
+    <section class="section roi-section">
+        <h2 class="section-title">Retour sur Investissement</h2>
+        <p class="section-subtitle">Des economies concretes et mesurables des le premier mois de deploiement</p>
+
+        <div class="roi-grid">
+            <div class="roi-card">
+                <div class="roi-card-icon">💬</div>
+                <div class="roi-card-value">8.4M XPF</div>
+                <div class="roi-card-label">Service Client / an</div>
+                <div class="roi-card-detail">Concierge IA 24/7 en 5 langues remplace 2 ETP service client</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-icon">📧</div>
+                <div class="roi-card-value">12M XPF</div>
+                <div class="roi-card-label">Marketing / an</div>
+                <div class="roi-card-detail">Newsletters + contenus SEO generes automatiquement</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-icon">📊</div>
+                <div class="roi-card-value">6M XPF</div>
+                <div class="roi-card-label">Analyse / an</div>
+                <div class="roi-card-detail">ROI Analyst + Competitor Intelligence automatises</div>
+            </div>
+            <div class="roi-card">
+                <div class="roi-card-icon">💰</div>
+                <div class="roi-card-value">+15%</div>
+                <div class="roi-card-label">Upsell Revenue</div>
+                <div class="roi-card-detail">Propositions upgrade personnalisees par IA</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflows Section -->
+    <section class="section workflows-section">
+        <h2 class="section-title">15 Agents IA Specialises</h2>
+        <p class="section-subtitle">Une suite complete couvrant tous les aspects de votre strategie e-marketing</p>
+
+        <div class="workflows-categories">
+            <span class="category-tag service">🎧 Service Client (3)</span>
+            <span class="category-tag marketing">📢 Marketing (3)</span>
+            <span class="category-tag operations">✈️ Operations (1)</span>
+            <span class="category-tag revenue">💎 Revenue (3)</span>
+            <span class="category-tag dashboard">📊 Dashboard (5)</span>
+        </div>
+
+        <div class="workflows-grid">
+            <!-- Service Client -->
+            <div class="workflow-card service">
+                <div class="workflow-header">
+                    <span class="workflow-number">1</span>
+                    <span class="workflow-title">Concierge IA Multilingue</span>
+                </div>
+                <p class="workflow-description">Assistant virtuel 24/7 capable de repondre en francais, anglais, espagnol, japonais et chinois. Base de connaissances RAG avec 36+ documents.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">5 langues</span>
+                    <span class="workflow-feature">RAG vectoriel</span>
+                    <span class="workflow-feature">24/7</span>
+                </div>
+            </div>
+
+            <div class="workflow-card service">
+                <div class="workflow-header">
+                    <span class="workflow-number">5</span>
+                    <span class="workflow-title">Booking Assistant</span>
+                </div>
+                <p class="workflow-description">Guide les clients dans leur processus de reservation avec recommandations personnalisees basees sur leurs preferences.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Guidage reservation</span>
+                    <span class="workflow-feature">Recommandations</span>
+                </div>
+            </div>
+
+            <div class="workflow-card service">
+                <div class="workflow-header">
+                    <span class="workflow-number">9</span>
+                    <span class="workflow-title">Review Responder</span>
+                </div>
+                <p class="workflow-description">Repond automatiquement aux avis clients (TripAdvisor, Google) avec un ton adapte et personnalise.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Multi-plateformes</span>
+                    <span class="workflow-feature">Ton adaptatif</span>
+                </div>
+            </div>
+
+            <!-- Marketing -->
+            <div class="workflow-card marketing">
+                <div class="workflow-header">
+                    <span class="workflow-number">2</span>
+                    <span class="workflow-title">Newsletter Personnalisee</span>
+                </div>
+                <p class="workflow-description">Generation de newsletters hyper-personnalisees par segment (lune de miel, famille, plongeurs, business).</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">5 segments</span>
+                    <span class="workflow-feature">A/B testing</span>
+                    <span class="workflow-feature">Auto-envoi</span>
+                </div>
+            </div>
+
+            <div class="workflow-card marketing">
+                <div class="workflow-header">
+                    <span class="workflow-number">3</span>
+                    <span class="workflow-title">Content Factory SEO+GEO</span>
+                </div>
+                <p class="workflow-description">Usine a contenus optimises SEO pour toutes vos destinations. Articles, guides, actualites generes automatiquement.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">SEO optimise</span>
+                    <span class="workflow-feature">Multi-destinations</span>
+                    <span class="workflow-feature">Images IA</span>
+                </div>
+            </div>
+
+            <div class="workflow-card marketing">
+                <div class="workflow-header">
+                    <span class="workflow-number">6</span>
+                    <span class="workflow-title">Social Monitor</span>
+                </div>
+                <p class="workflow-description">Veille automatisee sur les reseaux sociaux. Detection des mentions, sentiment analysis, alertes temps reel.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Veille 24/7</span>
+                    <span class="workflow-feature">Sentiment analysis</span>
+                </div>
+            </div>
+
+            <!-- Operations -->
+            <div class="workflow-card operations">
+                <div class="workflow-header">
+                    <span class="workflow-number">8</span>
+                    <span class="workflow-title">Flight Notifier</span>
+                </div>
+                <p class="workflow-description">Alertes proactives aux passagers en cas de retard, changement de porte ou annulation. Reduit les appels au call center.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Alertes proactives</span>
+                    <span class="workflow-feature">Multi-canal</span>
+                </div>
+            </div>
+
+            <!-- Revenue -->
+            <div class="workflow-card revenue">
+                <div class="workflow-header">
+                    <span class="workflow-number">4</span>
+                    <span class="workflow-title">ROI Analyst</span>
+                </div>
+                <p class="workflow-description">Analyse automatique des performances marketing. Detection d'anomalies, insights actionables, rapports hebdomadaires.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Anomaly detection</span>
+                    <span class="workflow-feature">Insights IA</span>
+                </div>
+            </div>
+
+            <div class="workflow-card revenue">
+                <div class="workflow-header">
+                    <span class="workflow-number">7</span>
+                    <span class="workflow-title">Competitor Intelligence</span>
+                </div>
+                <p class="workflow-description">Veille tarifaire et strategique sur vos concurrents (Air France, Hawaiian, Qantas). Alertes prix en temps reel.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Veille concurrentielle</span>
+                    <span class="workflow-feature">Alertes prix</span>
+                </div>
+            </div>
+
+            <div class="workflow-card revenue">
+                <div class="workflow-header">
+                    <span class="workflow-number">10</span>
+                    <span class="workflow-title">Upsell Engine</span>
+                </div>
+                <p class="workflow-description">Propositions d'upgrade intelligentes (Poerava Business, hotels partenaires) basees sur le profil et le comportement client.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">ML predictions</span>
+                    <span class="workflow-feature">+15% revenue</span>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="workflow-card dashboard">
+                <div class="workflow-header">
+                    <span class="workflow-number">11</span>
+                    <span class="workflow-title">Dashboard API Hub</span>
+                </div>
+                <p class="workflow-description">API centrale pour le dashboard de pilotage. CRUD calendrier editorial, gestion des prompts IA modifiables.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">API REST</span>
+                    <span class="workflow-feature">CRUD complet</span>
+                </div>
+            </div>
+
+            <div class="workflow-card dashboard">
+                <div class="workflow-header">
+                    <span class="workflow-number">12</span>
+                    <span class="workflow-title">Content Scheduler</span>
+                </div>
+                <p class="workflow-description">Publication automatique des contenus programmes. Newsletters et articles publies a l'heure prevue.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Cron horaire</span>
+                    <span class="workflow-feature">Auto-publish</span>
+                </div>
+            </div>
+
+            <div class="workflow-card dashboard">
+                <div class="workflow-header">
+                    <span class="workflow-number">13</span>
+                    <span class="workflow-title">Dashboard AI Assistant</span>
+                </div>
+                <p class="workflow-description">Chatbot interne pour vos equipes. Modifier contenus, generer rapports, reprogrammer publications par simple message.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">NLP avance</span>
+                    <span class="workflow-feature">Actions directes</span>
+                </div>
+            </div>
+
+            <div class="workflow-card dashboard">
+                <div class="workflow-header">
+                    <span class="workflow-number">14</span>
+                    <span class="workflow-title">Report Generator</span>
+                </div>
+                <p class="workflow-description">Generation de rapports personnalises sur demande. KPIs, performances, analyses en quelques secondes.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">Rapports IA</span>
+                    <span class="workflow-feature">Export PDF</span>
+                </div>
+            </div>
+
+            <div class="workflow-card dashboard">
+                <div class="workflow-header">
+                    <span class="workflow-number">15</span>
+                    <span class="workflow-title">Smart Content Generator</span>
+                </div>
+                <p class="workflow-description">Generation intelligente avec toujours 1 mois d'avance. Suggestions basees sur KPIs et anomalies detectees.</p>
+                <div class="workflow-features">
+                    <span class="workflow-feature">1 mois d'avance</span>
+                    <span class="workflow-feature">KPI-driven</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="section dashboard-section">
+        <h2 class="section-title">Dashboard de Pilotage Inclus</h2>
+        <p class="section-subtitle">Interface moderne pour vos equipes marketing - calendrier editorial, rapports, chatbot IA integre</p>
+
+        <div class="dashboard-preview">
+            <div class="dashboard-browser">
+                <div class="dashboard-browser-bar">
+                    <span class="browser-dot red"></span>
+                    <span class="browser-dot yellow"></span>
+                    <span class="browser-dot green"></span>
+                    <span class="browser-url">https://dashboard-atn.pacifikai.com</span>
+                </div>
+                <div class="dashboard-content">
+                    <div class="dashboard-sidebar">
+                        <div class="sidebar-item active">📊 Overview</div>
+                        <div class="sidebar-item">📅 Calendrier</div>
+                        <div class="sidebar-item">💬 Conversations</div>
+                        <div class="sidebar-item">📧 Newsletters</div>
+                        <div class="sidebar-item">✈️ Vols</div>
+                        <div class="sidebar-item">⭐ Avis</div>
+                        <div class="sidebar-item">📈 ROI</div>
+                        <div class="sidebar-item">⚙️ Settings</div>
+                    </div>
+                    <div class="dashboard-main">
+                        <div class="dashboard-card">
+                            <h4>Conversations aujourd'hui</h4>
+                            <span class="value teal">247</span>
+                        </div>
+                        <div class="dashboard-card">
+                            <h4>Taux resolution</h4>
+                            <span class="value success">94%</span>
+                        </div>
+                        <div class="dashboard-card">
+                            <h4>Upsells generes</h4>
+                            <span class="value gold">1.2M XPF</span>
+                        </div>
+                        <div class="dashboard-card wide">
+                            <h4>Contenus programmes cette semaine</h4>
+                            <span class="value">12 newsletters + 8 articles</span>
+                        </div>
+                        <div class="dashboard-card">
+                            <h4>Alertes actives</h4>
+                            <span class="value">3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section pricing-section">
+        <h2 class="section-title">Options de Deploiement</h2>
+        <p class="section-subtitle">Choisissez la formule adaptee a vos besoins</p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-name">Starter</div>
+                <div class="pricing-description">Pour demarrer avec l'IA</div>
+                <div class="pricing-price">
+                    <span class="pricing-currency">XPF</span>
+                    <span class="pricing-amount">450K</span>
+                    <div class="pricing-period">/ mois</div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="check">✓</span> 5 workflows au choix</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Dashboard basique</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Support email</div>
+                    <div class="pricing-feature"><span class="check">✓</span> 2 langues</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Rapports mensuels</div>
+                </div>
+                <a href="mailto:jordy@pacifikai.com?subject=ATN Starter" class="pricing-cta secondary">Nous contacter</a>
+            </div>
+
+            <div class="pricing-card recommended">
+                <span class="pricing-badge">Recommande</span>
+                <div class="pricing-name">Business</div>
+                <div class="pricing-description">Solution complete</div>
+                <div class="pricing-price">
+                    <span class="pricing-currency">XPF</span>
+                    <span class="pricing-amount">850K</span>
+                    <div class="pricing-period">/ mois</div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="check">✓</span> 15 workflows complets</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Dashboard complet</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Support prioritaire</div>
+                    <div class="pricing-feature"><span class="check">✓</span> 5 langues</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Rapports temps reel</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Formation equipes</div>
+                </div>
+                <a href="mailto:jordy@pacifikai.com?subject=ATN Business" class="pricing-cta primary">Demarrer maintenant</a>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">Enterprise</div>
+                <div class="pricing-description">Sur mesure</div>
+                <div class="pricing-price">
+                    <span class="pricing-amount">Sur devis</span>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="check">✓</span> Workflows personnalises</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Integration SI existant</div>
+                    <div class="pricing-feature"><span class="check">✓</span> SLA garanti</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Support dedie</div>
+                    <div class="pricing-feature"><span class="check">✓</span> On-premise possible</div>
+                    <div class="pricing-feature"><span class="check">✓</span> Audit securite</div>
+                </div>
+                <a href="mailto:jordy@pacifikai.com?subject=ATN Enterprise" class="pricing-cta secondary">Demander un devis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section timeline-section">
+        <h2 class="section-title">Deploiement en 4 Semaines</h2>
+        <p class="section-subtitle">Un processus structure pour une mise en production rapide et sans friction</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot">S1</div>
+                <div class="timeline-title">Audit & Setup</div>
+                <div class="timeline-description">Analyse de vos besoins, configuration infrastructure</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot">S2</div>
+                <div class="timeline-title">Integration</div>
+                <div class="timeline-description">Connexion a vos systemes existants (CRM, emailing)</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot">S3</div>
+                <div class="timeline-title">Tests & Training</div>
+                <div class="timeline-description">Validation, ajustements, formation equipes</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot">S4</div>
+                <div class="timeline-title">Go Live</div>
+                <div class="timeline-description">Mise en production, monitoring, support</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Pret a transformer votre e-marketing ?</h2>
+        <p>Rejoignez les compagnies aeriennes qui ont deja adopte l'IA pour leur strategie digitale : Air France, Lufthansa, Emirates...</p>
+        <div class="cta-buttons">
+            <a href="mailto:jordy@pacifikai.com?subject=Demo ATN&body=Bonjour, je souhaite organiser une demo des solutions IA pour Air Tahiti Nui." class="cta-btn primary">Planifier une demo</a>
+            <a href="https://dashboard-app-ten-bay.vercel.app" target="_blank" class="cta-btn secondary">Voir le dashboard live</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-contact">
+            <strong>PACIFIK'AI</strong> - Agence Automatisation IA<br>
+            <a href="mailto:jordy@pacifikai.com">jordy@pacifikai.com</a> | <a href="tel:+68987123456">+689 87 12 34 56</a>
+        </div>
+        <div class="footer-legal">
+            Proposition valable 30 jours - Document confidentiel - Janvier 2026
+        </div>
+    </footer>
+</body>
+</html>
