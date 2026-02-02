@@ -8523,11 +8523,11 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     id: c.id,
                     titre: c.titre,
                     contenu: c.contenu,
-                    plateforme: c.plateforme,
+                    plateforme: c.platform,
                     status: c.status,
-                    date: c.publish_date,
+                    date: c.published_at || c.scheduled_date,
                     hashtags: c.hashtags,
-                    imageUrl: c.image_url
+                    imageUrl: c.media_url
                 }));
 
                 // Transformer infrastructures

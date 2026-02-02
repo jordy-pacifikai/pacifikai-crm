@@ -365,7 +365,7 @@ class SupabaseClient {
     // === CONTENT CALENDAR ===
 
     async getContent() {
-        return await this.select('content_calendar', {}, { order: 'publish_date.desc' });
+        return await this.select('content_calendar', {}, { order: 'published_at.desc' });
     }
 
     async createContent(data) {
