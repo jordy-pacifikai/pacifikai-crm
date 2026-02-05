@@ -1855,6 +1855,314 @@
             margin: 0.25rem 0;
         }
 
+        /* Temperature Chips */
+        .temp-chips {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.125rem;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+
+        .temp-chip {
+            padding: 0.25rem 0.625rem;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            background: transparent;
+            color: var(--text-dim);
+        }
+
+        .temp-chip:hover { color: var(--text); background: var(--bg-muted); }
+        .temp-chip.active { color: white; }
+        .temp-chip.active[data-temp="all"] { background: var(--accent); }
+        .temp-chip.active[data-temp="hot"], .temp-chip.hot.active { background: var(--red); }
+        .temp-chip.active[data-temp="chaud"], .temp-chip.chaud.active { background: var(--orange); }
+        .temp-chip.active[data-temp="tiede"], .temp-chip.tiede.active { background: var(--yellow); color: #1a1a2e; }
+        .temp-chip.active[data-temp="froid"], .temp-chip.froid.active { background: var(--blue); }
+
+        /* Filter Toggle Button */
+        .filter-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .filter-toggle:hover { background: var(--bg-muted); color: var(--text); }
+        .filter-toggle.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .filter-toggle svg { width: 12px; height: 12px; }
+
+        /* Active Filters Bar */
+        .active-filters {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .active-filters:empty { display: none; }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.6875rem;
+            background: var(--accent-glow);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        .filter-tag-close {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.15s;
+        }
+
+        .filter-tag-close:hover { opacity: 1; }
+
+        .clear-filters {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .clear-filters:hover { color: var(--red); }
+
+        /* Grid View */
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .grid-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--border);
+            transition: background 0.2s;
+        }
+
+        .grid-card.hot::before { background: var(--red); }
+        .grid-card.chaud::before { background: var(--orange); }
+        .grid-card.tiede::before { background: var(--yellow); }
+        .grid-card.froid::before { background: var(--blue); }
+
+        .grid-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .grid-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .grid-card-company {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .grid-card-badge {
+            padding: 0.125rem 0.5rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            white-space: nowrap;
+        }
+
+        .grid-card-badge.hot { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .grid-card-badge.chaud { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
+        .grid-card-badge.tiede { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+        .grid-card-badge.froid { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+
+        .grid-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .grid-card-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .grid-card-row strong { color: var(--text); font-weight: 500; }
+
+        .grid-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .grid-card-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .grid-card-status {
+            font-size: 0.6875rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--bg-muted);
+            color: var(--text-muted);
+        }
+
+        .grid-card-assets {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .grid-card-assets span {
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            background: var(--bg-muted);
+            border-radius: 3px;
+            color: var(--text-dim);
+        }
+
+        .grid-card.has-assets { border-left: 3px solid var(--accent); }
+
+        /* Compact View */
+        .compact-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compact-row {
+            display: grid;
+            grid-template-columns: 2.5rem 1fr 120px 100px 100px 80px 60px;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background 0.1s;
+            font-size: 0.8125rem;
+        }
+
+        .compact-row:hover { background: var(--bg-muted); }
+        .compact-row:last-child { border-bottom: none; }
+
+        .compact-row .avatar {
+            width: 2rem;
+            height: 2rem;
+            font-size: 0.625rem;
+        }
+
+        .compact-company {
+            font-weight: 500;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .compact-sector {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .compact-status {
+            font-size: 0.6875rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: var(--bg-muted);
+            color: var(--text-muted);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .compact-value {
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+        }
+
+        .compact-temp {
+            font-size: 0.625rem;
+            font-weight: 600;
+            padding: 0.15rem 0.375rem;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .compact-temp.hot { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .compact-temp.chaud { background: rgba(245, 158, 11, 0.15); color: var(--orange); }
+        .compact-temp.tiede { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+        .compact-temp.froid { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+
+        .compact-assets-icon {
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        .compact-header {
+            display: grid;
+            grid-template-columns: 2.5rem 1fr 120px 100px 100px 80px 60px;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         /* Summary Cards */
         .summary-cards {
             display: grid;
@@ -5958,6 +6266,14 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                                 Liste
                             </button>
+                            <button class="view-toggle-btn" data-pview="grid" title="Grille">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                                Grille
+                            </button>
+                            <button class="view-toggle-btn" data-pview="compact" title="Compact">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                                Compact
+                            </button>
                             <button class="view-toggle-btn" data-pview="pipeline" title="Pipeline Status">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                                 Pipeline
@@ -6041,6 +6357,19 @@
                                 </button>
                                 <div class="dropdown-menu" id="status-dropdown"></div>
                             </div>
+                            <!-- Temperature Quick Filters -->
+                            <div class="temp-chips" id="temp-chips">
+                                <button class="temp-chip active" data-temp="all" onclick="setTempFilter('all')">Tous</button>
+                                <button class="temp-chip hot" data-temp="hot" onclick="setTempFilter('hot')">Hot</button>
+                                <button class="temp-chip chaud" data-temp="chaud" onclick="setTempFilter('chaud')">Chaud</button>
+                                <button class="temp-chip tiede" data-temp="tiede" onclick="setTempFilter('tiede')">Tiede</button>
+                                <button class="temp-chip froid" data-temp="froid" onclick="setTempFilter('froid')">Froid</button>
+                            </div>
+                            <!-- Has Assets Toggle -->
+                            <button class="filter-toggle" id="assets-filter-toggle" onclick="toggleAssetsFilter()" title="Filtrer prospects avec assets">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                Assets
+                            </button>
                         </div>
                         <div class="toolbar-right">
                             <!-- Date Filter -->
@@ -6086,6 +6415,23 @@
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                                         Secteur (A-Z)
                                     </div>
+                                    <div class="dropdown-item" data-sort="status" onclick="setSortBy('status')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                        Status (pipeline)
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-item" data-sort="date-desc" onclick="setSortBy('date-desc')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Date (recent)
+                                    </div>
+                                    <div class="dropdown-item" data-sort="date-asc" onclick="setSortBy('date-asc')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        Date (ancien)
+                                    </div>
+                                    <div class="dropdown-item" data-sort="score" onclick="setSortBy('score')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                        Score IA
+                                    </div>
                                     <div class="dropdown-divider"></div>
                                     <div class="dropdown-item" data-sort="assets" onclick="setSortBy('assets')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -6121,6 +6467,20 @@
                                         <tbody id="prospects-table"></tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid View (Cards) -->
+                    <div class="prospects-view-container" id="pview-grid">
+                        <div class="grid-view" id="grid-board"></div>
+                    </div>
+
+                    <!-- Compact View -->
+                    <div class="prospects-view-container" id="pview-compact">
+                        <div class="card">
+                            <div class="card-body flush">
+                                <div class="compact-list" id="compact-list"></div>
                             </div>
                         </div>
                     </div>
@@ -8185,6 +8545,8 @@
         let currentSectorFilter = 'all';
         let currentStatusFilter = 'all';
         let currentDateFilter = 'all';
+        let currentTempFilter = 'all';
+        let assetsFilterActive = false;
         let searchQuery = '';
 
         // Airtable Config - Clés chargées depuis localStorage uniquement
@@ -9906,11 +10268,76 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 'value-asc': 'Valeur ↑',
                 'company': 'Entreprise',
                 'sector': 'Secteur',
+                'status': 'Status',
+                'date-desc': 'Date ↓',
+                'date-asc': 'Date ↑',
+                'score': 'Score IA',
                 'assets': 'Avec assets'
             };
             document.getElementById('sort-label').textContent = labels[sort] || 'Trier par';
             renderProspectsViews();
             toggleDropdown('sort-dropdown');
+        }
+
+        function setTempFilter(temp) {
+            currentTempFilter = temp;
+            document.querySelectorAll('.temp-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.temp === temp);
+            });
+            renderProspectsViews();
+        }
+
+        function toggleAssetsFilter() {
+            assetsFilterActive = !assetsFilterActive;
+            document.getElementById('assets-filter-toggle').classList.toggle('active', assetsFilterActive);
+            renderProspectsViews();
+        }
+
+        function clearAllFilters() {
+            searchQuery = '';
+            currentSectorFilter = 'all';
+            currentStatusFilter = 'all';
+            currentDateFilter = 'all';
+            currentTempFilter = 'all';
+            assetsFilterActive = false;
+            currentSort = 'priority';
+            document.getElementById('search-prospects').value = '';
+            document.getElementById('sector-filter-label').textContent = 'Tous secteurs';
+            document.getElementById('status-filter-label').textContent = 'Tous status';
+            document.getElementById('date-filter-label').textContent = 'Toutes dates';
+            document.getElementById('sort-label').textContent = 'Priorite';
+            document.getElementById('assets-filter-toggle').classList.remove('active');
+            document.querySelectorAll('.temp-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.temp === 'all');
+            });
+            buildFilterDropdowns();
+            renderProspectsViews();
+        }
+
+        function renderActiveFilters() {
+            let container = document.getElementById('active-filters-bar');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'active-filters-bar';
+                container.className = 'active-filters';
+                const toolbar = document.querySelector('#view-prospects .toolbar');
+                toolbar.insertAdjacentElement('afterend', container);
+            }
+            const tags = [];
+            if (searchQuery) tags.push({ label: `Recherche: "${searchQuery}"`, clear: () => { searchQuery = ''; document.getElementById('search-prospects').value = ''; renderProspectsViews(); } });
+            if (currentSectorFilter !== 'all') tags.push({ label: `Secteur: ${currentSectorFilter}`, clear: () => setSectorFilter('all') });
+            if (currentStatusFilter !== 'all') tags.push({ label: `Status: ${statusLabel(currentStatusFilter)}`, clear: () => setStatusFilter('all') });
+            if (currentTempFilter !== 'all') tags.push({ label: `Temp: ${currentTempFilter}`, clear: () => setTempFilter('all') });
+            if (assetsFilterActive) tags.push({ label: 'Avec assets', clear: () => toggleAssetsFilter() });
+            if (currentDateFilter !== 'all') tags.push({ label: `Date: ${currentDateFilter}`, clear: () => setDateFilter('all') });
+
+            if (tags.length === 0) { container.innerHTML = ''; return; }
+
+            container.innerHTML = tags.map((t, i) =>
+                `<span class="filter-tag">${t.label} <span class="filter-tag-close" onclick="activeFilterClearFns[${i}]()">&times;</span></span>`
+            ).join('') + `<button class="clear-filters" onclick="clearAllFilters()">Tout effacer</button>`;
+
+            window.activeFilterClearFns = tags.map(t => t.clear);
         }
 
         function setDateFilter(dateFilter) {
@@ -10044,6 +10471,19 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 });
             }
 
+            // Temperature filter
+            if (currentTempFilter !== 'all') {
+                filtered = filtered.filter(p => p.priority === currentTempFilter);
+            }
+
+            // Assets filter
+            if (assetsFilterActive) {
+                filtered = filtered.filter(p => {
+                    const assets = getProspectAssets(p.company);
+                    return assets && assets.files && assets.files.length > 0;
+                });
+            }
+
             // Sort
             const priorityOrder = { hot: 0, chaud: 1, tiede: 2, froid: 3 };
             const statusOrder = { lead: 0, contacted: 1, meeting: 2, proposal: 3, won: 4, lost: 5 };
@@ -10064,8 +10504,24 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 case 'sector':
                     filtered.sort((a, b) => a.sector.localeCompare(b.sector));
                     break;
+                case 'status':
+                    filtered.sort((a, b) => (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99));
+                    break;
+                case 'date-desc':
+                    filtered.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+                    break;
+                case 'date-asc':
+                    filtered.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+                    break;
+                case 'score':
+                    filtered.sort((a, b) => (b.score || 0) - (a.score || 0));
+                    break;
                 case 'assets':
-                    filtered.sort((a, b) => ((b.assets?.length || 0) - (a.assets?.length || 0)));
+                    filtered.sort((a, b) => {
+                        const aAssets = getProspectAssets(a.company);
+                        const bAssets = getProspectAssets(b.company);
+                        return ((bAssets?.files?.length || 0) - (aAssets?.files?.length || 0));
+                    });
                     break;
             }
 
@@ -10076,7 +10532,10 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             renderSummaryCards();
             renderKanbanTemp();
             renderProspectsTable(currentStatusFilter === 'all' ? 'all' : currentStatusFilter);
+            renderGridView();
+            renderCompactView();
             renderPipelineStatus();
+            renderActiveFilters();
             document.getElementById('prospects-count-header').textContent = getFilteredProspects().length;
         }
 
@@ -10088,6 +10547,92 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 document.getElementById('sum-' + temp).textContent = items.length;
                 document.getElementById('sum-' + temp + '-val').textContent = fmtXPF(total);
             });
+        }
+
+        // ============================================
+        // GRID VIEW (Cards)
+        // ============================================
+
+        function renderGridView() {
+            const board = document.getElementById('grid-board');
+            if (!board) return;
+            const filtered = getFilteredProspects();
+
+            if (filtered.length === 0) {
+                board.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-dim);">Aucun prospect ne correspond aux filtres</div>';
+                return;
+            }
+
+            board.innerHTML = filtered.map(p => {
+                const assets = getProspectAssets(p.company);
+                const hasAssets = assets && assets.files && assets.files.length > 0;
+                const initials = (p.company || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+                const assetIcons = hasAssets ? `<div class="grid-card-assets">
+                    ${assets.files.slice(0, 4).map(f => `<span>${f.type}</span>`).join('')}
+                    ${assets.files.length > 4 ? `<span>+${assets.files.length - 4}</span>` : ''}
+                </div>` : '';
+
+                return `<div class="grid-card ${p.priority || 'froid'} ${hasAssets ? 'has-assets' : ''}" onclick="showProspectModal('${p.id}')">
+                    <div class="grid-card-header">
+                        <div class="grid-card-company">${p.company}</div>
+                        <span class="grid-card-badge ${p.priority || 'froid'}">${priorityLabel(p.priority)}</span>
+                    </div>
+                    <div class="grid-card-info">
+                        ${p.contact || p.name ? `<div class="grid-card-row"><span>Contact</span><strong>${p.contact || p.name}</strong></div>` : ''}
+                        <div class="grid-card-row"><span>Secteur</span><strong>${p.sector || '-'}</strong></div>
+                        <div class="grid-card-row"><span>Status</span><strong>${statusLabel(p.status)}</strong></div>
+                        ${p.score ? `<div class="grid-card-row"><span>Score IA</span><strong>${p.score}/100</strong></div>` : ''}
+                    </div>
+                    ${assetIcons}
+                    <div class="grid-card-footer">
+                        <span class="grid-card-value">${fmtXPF(p.value)}</span>
+                        <span class="grid-card-status">${statusLabel(p.status)}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ============================================
+        // COMPACT VIEW (One-liner rows)
+        // ============================================
+
+        function renderCompactView() {
+            const list = document.getElementById('compact-list');
+            if (!list) return;
+            const filtered = getFilteredProspects();
+
+            const header = `<div class="compact-header">
+                <span></span>
+                <span>Entreprise</span>
+                <span>Secteur</span>
+                <span>Status</span>
+                <span>Valeur</span>
+                <span>Temp.</span>
+                <span>Assets</span>
+            </div>`;
+
+            if (filtered.length === 0) {
+                list.innerHTML = header + '<div style="text-align:center;padding:2rem;color:var(--text-dim);">Aucun resultat</div>';
+                return;
+            }
+
+            const avatarColors = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+            list.innerHTML = header + filtered.map((p, i) => {
+                const initials = (p.company || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+                const color = avatarColors[i % avatarColors.length];
+                const assets = getProspectAssets(p.company);
+                const hasAssets = assets && assets.files && assets.files.length > 0;
+
+                return `<div class="compact-row" onclick="showProspectModal('${p.id}')">
+                    <div class="avatar" style="background:${color}">${initials}</div>
+                    <div class="compact-company">${p.company}</div>
+                    <div class="compact-sector">${p.sector || '-'}</div>
+                    <div class="compact-status">${statusLabel(p.status)}</div>
+                    <div class="compact-value">${fmtXPF(p.value)}</div>
+                    <div class="compact-temp ${p.priority || 'froid'}">${priorityLabel(p.priority)}</div>
+                    <div class="compact-assets-icon">${hasAssets ? `${assets.files.length}` : '-'}</div>
+                </div>`;
+            }).join('');
         }
 
         // ============================================
