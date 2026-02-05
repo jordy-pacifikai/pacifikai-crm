@@ -14074,7 +14074,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             }).filter(Boolean).join('\n');
 
             // Build conversation history context
-            const chatHistory = conversationHistory.slice(-5).map(m =>
+            const recentHistory = chatHistory.slice(-5).map(m =>
                 `[${m.role}]: ${m.content.substring(0, 100)}...`
             ).join('\n');
 
@@ -14117,7 +14117,7 @@ ${tasksList || 'Aucune tache'}
 ${assetsContext || 'Aucun asset'}
 
 ### HISTORIQUE CONVERSATION RECENTE
-${chatHistory || 'Nouvelle conversation'}
+${recentHistory || 'Nouvelle conversation'}
 
 ### Liste complete des prospects
 ${prospects.map(p => `- ${p.company} | ${p.sector} | ${p.priority} | ${statusLabel(p.status)} | ${fmtXPF(p.value)}`).join('\n')}
