@@ -13816,13 +13816,37 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
         async function processMessage(message) {
             // ============================================
-            // MANA AGENT v2 - VIA N8N WEBHOOK
+            // MANA AGENT v3 - INTELLIGENT ROUTING
             // Mémoire persistante dans Airtable
-            // Vision 360° (CRM, Tasks, Roadmap, Content, Workflows)
+            // Vision 360° (CRM, Tasks, Roadmap, Content, Workflows, Assets)
             // ============================================
 
+            // Detect intent for routing
+            const intent = detectIntent(message);
+            console.log('[MANA v3] Intent detected:', intent.type, 'confidence:', intent.confidence);
+
+            // Build enriched context
+            const fullContext = buildFullContext();
+
+            // Get current prospect context if modal is open
+            let prospectContext = '';
+            if (currentProspectId) {
+                const prospect = prospects.find(p => p.id === currentProspectId);
+                if (prospect) {
+                    const assets = getProspectAssets(prospect.company);
+                    prospectContext = `\n\n### PROSPECT ACTUELLEMENT SELECTIONNE\n` +
+                        `- Entreprise: ${prospect.company}\n` +
+                        `- Secteur: ${prospect.sector}\n` +
+                        `- Status: ${statusLabel(prospect.status)}\n` +
+                        `- Priorite: ${prospect.priority}\n` +
+                        `- Valeur: ${fmtXPF(prospect.value)}\n` +
+                        `- Contact: ${prospect.contact || 'N/A'}\n` +
+                        `- Assets: ${assets ? assets.files.map(f => f.name).join(', ') : 'Aucun'}`;
+                }
+            }
+
             try {
-                console.log('[MANA v3] Envoi au webhook n8n avec session:', MANA_SESSION_ID);
+                console.log('[MANA v3] Envoi au webhook n8n avec session:', MANA_SESSION_ID, 'intent:', intent.type);
 
                 const response = await fetch(N8N_MANA_WEBHOOK, {
                     method: 'POST',
@@ -13831,7 +13855,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     },
                     body: JSON.stringify({
                         message: message,
-                        session_id: MANA_SESSION_ID
+                        session_id: MANA_SESSION_ID,
+                        intent: intent.type,
+                        context: fullContext + prospectContext
                     })
                 });
 
@@ -13951,6 +13977,54 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
         }
 
         // Build comprehensive context for Claude
+        // ============================================
+        // INTENT DETECTION - Route to MANA or RAG
+        // ============================================
+        function detectIntent(message) {
+            const msg = message.toLowerCase().trim();
+
+            // CRM Actions - Route to MANA
+            const crmPatterns = [
+                /\b(modifi|chang|met|passe)\b.*(priorit|status|statut|temperature)/i,
+                /\b(creer?|ajoute|nouveau)\b.*(prospect|tache|task|rappel|followup)/i,
+                /\b(supprim|efface|retire)\b/i,
+                /\b(relance|email|appel|contact)\b.*\b(prospect|client)\b/i,
+                /\b(liste|affiche|montre|donne)\b.*(prospect|tache|pipeline)/i,
+                /combien\s+(de\s+)?(prospect|client|tache)/i,
+                /\b(pipeline|total|valeur)\b/i,
+                /\bfiche\b.*\b(de|du|d')\b/i,
+                /\b(qui|quel)\b.*\b(hot|chaud|tiede|froid|prioritaire)\b/i,
+                /\ba\s+relancer\b/i,
+            ];
+
+            // FAQ/Knowledge - Could route to RAG (currently uses MANA with context)
+            const faqPatterns = [
+                /\b(qu'est-ce|c'est quoi|explique|comment)\b.*\b(pacifik|service|offre|tarif|prix)\b/i,
+                /\b(process|methode|etape)\b/i,
+                /\b(avantage|benefice|pourquoi)\b.*\b(ia|automatisation|n8n)\b/i,
+            ];
+
+            // Check CRM patterns
+            for (const pattern of crmPatterns) {
+                if (pattern.test(msg)) {
+                    return { type: 'crm_action', confidence: 0.9 };
+                }
+            }
+
+            // Check FAQ patterns
+            for (const pattern of faqPatterns) {
+                if (pattern.test(msg)) {
+                    return { type: 'question_faq', confidence: 0.7 };
+                }
+            }
+
+            // Default to CRM (MANA handles both with context)
+            return { type: 'crm_action', confidence: 0.5 };
+        }
+
+        // ============================================
+        // BUILD FULL CONTEXT - Enhanced with all data
+        // ============================================
         function buildFullContext() {
             const stats = {
                 total: prospects.length,
@@ -13989,6 +14063,21 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return `- [${t.status}] ${t.title}${dueStr} - ${t.priority}`;
             }).join('\n');
 
+            // Build assets context per prospect
+            const assetsContext = prospects.slice(0, 10).map(p => {
+                const assets = getProspectAssets(p.company);
+                if (assets && assets.files && assets.files.length > 0) {
+                    const filesList = assets.files.map(f => `${f.type}: ${f.name}`).join(', ');
+                    return `- ${p.company}: ${filesList}`;
+                }
+                return null;
+            }).filter(Boolean).join('\n');
+
+            // Build conversation history context
+            const chatHistory = conversationHistory.slice(-5).map(m =>
+                `[${m.role}]: ${m.content.substring(0, 100)}...`
+            ).join('\n');
+
             return `### Statistiques Pipeline
 - Total prospects: ${stats.total}
 - Pipeline total: ${fmtXPF(stats.totalPipeline)}
@@ -14023,6 +14112,12 @@ ${todayFollowups || 'Aucun'}
 
 ### Liste des taches
 ${tasksList || 'Aucune tache'}
+
+### ASSETS PAR PROSPECT
+${assetsContext || 'Aucun asset'}
+
+### HISTORIQUE CONVERSATION RECENTE
+${chatHistory || 'Nouvelle conversation'}
 
 ### Liste complete des prospects
 ${prospects.map(p => `- ${p.company} | ${p.sector} | ${p.priority} | ${statusLabel(p.status)} | ${fmtXPF(p.value)}`).join('\n')}
