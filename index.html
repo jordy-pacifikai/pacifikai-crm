@@ -11470,7 +11470,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     <div class="grid-card-header">
                         <div class="grid-card-company">${p.company}</div>
                         <span class="grid-card-badge ${p.priority || 'froid'}">${priorityLabel(p.priority)}</span>
-                        <button class="prospect-menu-btn" onclick="event.stopPropagation(); showProspectContextMenu(event, '${p.id}')" title="Actions">⋮</button>
+                        <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
                     <div class="grid-card-info">
                         ${p.contact || p.name ? `<div class="grid-card-row"><span>Contact</span><strong>${p.contact || p.name}</strong></div>` : ''}
@@ -11529,7 +11529,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     <div class="compact-temp ${p.priority || 'froid'}">${priorityLabel(p.priority)}</div>
                     <div class="compact-assignee">${renderAssigneeBadge(p.assignedTo, 18)}</div>
                     <div class="compact-assets-icon">${hasAssets ? `${assets.files.length}` : '-'}</div>
-                    <button class="prospect-menu-btn" onclick="event.stopPropagation(); showProspectContextMenu(event, '${p.id}')" title="Actions">⋮</button>
+                    <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                 </div>`;
             }).join('');
         }
@@ -11586,7 +11586,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     <div class="kanban-card-header">
                         <span class="kanban-card-company">${p.company}${renderAssetIcons(p.assets)}</span>
                         <span class="kanban-card-status badge ${p.status}">${statusLabel(p.status)}</span>
-                        <button class="prospect-menu-btn" onclick="event.stopPropagation(); showProspectContextMenu(event, '${p.id}')" title="Actions">⋮</button>
+                        <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
                     ${p.name ? `<div class="kanban-card-contact">${p.name}</div>` : ''}
                     <div class="kanban-card-sector">${p.sector}</div>
@@ -11993,8 +11993,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     const folderEsc = JSON.stringify(assets.folder);
                     const fileEsc = JSON.stringify(f.file);
                     const companyEsc = JSON.stringify(prospect.company);
+                    const urlEsc = f.url ? JSON.stringify(f.url) : 'null';
                     return `
-                    <div class="asset-card ${f.favorite ? 'favorite' : ''}" data-asset-type="${f.type || 'doc'}" onclick="openAsset(${folderEsc}, ${fileEsc})">
+                    <div class="asset-card ${f.favorite ? 'favorite' : ''}" data-asset-type="${f.type || 'doc'}" onclick="openAsset(${folderEsc}, ${fileEsc}, ${urlEsc})">
                         <div class="asset-card-icon ${f.type}">${typeIcons[f.type] || '📄'}</div>
                         <div class="asset-card-content">
                             <div class="asset-card-name">${f.favorite ? '★ ' : ''}${f.name}</div>
@@ -14486,7 +14487,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                                  style="cursor: pointer;">
                                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;">
                                     <div class="pipeline-card-name">${p.company}${renderAssetIcons(p.assets, true)}</div>
-                                    <button class="prospect-menu-btn" onclick="event.stopPropagation(); showProspectContextMenu(event, '${p.id}')" title="Actions">⋮</button>
+                                    <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                                 </div>
                                 <div class="pipeline-card-company">${p.sector}</div>
                                 <div class="pipeline-card-footer">
