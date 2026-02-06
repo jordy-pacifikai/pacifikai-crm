@@ -448,21 +448,11 @@
         }
 
         .nav-item.active {
-            background: var(--sidebar-active-bg);
             color: var(--sidebar-text);
-            font-weight: 500;
         }
 
         .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 2px;
-            height: 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);
-            border-radius: 0 2px 2px 0;
+            display: none;
         }
 
         .nav-item svg {
@@ -473,7 +463,7 @@
         }
 
         .nav-item:hover svg { opacity: 1; }
-        .nav-item.active svg { opacity: 1; color: var(--sidebar-text); }
+        .nav-item.active svg { opacity: 1; color: var(--gold); }
 
         .nav-badge {
             margin-left: auto;
