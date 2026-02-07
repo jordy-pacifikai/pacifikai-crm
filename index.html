@@ -10081,8 +10081,8 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                             if (!exists) {
                                 prospects.push({
                                     id: mp.id,
-                                    name: mp.name || '',
-                                    company: mp.company || 'Prospect Messenger',
+                                    name: mp.name || 'Visiteur',
+                                    company: mp.company || '',
                                     sector: mp.sector || 'Non defini',
                                     status: stageMap[mp.conversation_stage] || 'lead',
                                     value: 0,
@@ -10627,8 +10627,8 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                                  ondragend="handleDragEnd(event)"
                                  onclick="openProspectDetail('${p.id}')"
                                  style="cursor: pointer;">
-                                <div class="pipeline-card-name">${p.company}${renderAssetIcons(p.assets, true)}${infraIndicator} ${scoreBadge}</div>
-                                <div class="pipeline-card-company">${p.sector}</div>
+                                <div class="pipeline-card-name">${prospectDisplayName(p)}${isAutoProspect(p) ? ' ' + sourceBadge(p.source) : ''}${renderAssetIcons(p.assets, true)}${infraIndicator} ${scoreBadge}</div>
+                                <div class="pipeline-card-company">${isAutoProspect(p) ? (p.company || p.sector) : p.sector}</div>
                                 <div class="pipeline-card-footer">
                                     <span class="pipeline-card-value">${fmtXPF(p.value)}</span>
                                     ${p.priority ? `<span class="pipeline-card-priority ${p.priority}">${priorityLabel(p.priority)}</span>` : ''}
@@ -10668,12 +10668,15 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 <tr class="${p.assets?.length ? 'has-assets' : ''}" onclick="openProspectDetail('${p.id}')" style="cursor: pointer;">
                     <td>
                         <div class="cell-name">
-                            <div class="avatar ${getAvatarColor(p.status)}">${initials(p.company)}</div>
-                            <span>${p.company}</span>${renderAssetIcons(p.assets)}${infraIndicator}
+                            <div class="avatar ${getAvatarColor(p.status)}">${initials(prospectDisplayName(p))}</div>
+                            <div>
+                                <span>${prospectDisplayName(p)}</span>${isAutoProspect(p) ? ' ' + sourceBadge(p.source) : ''}${renderAssetIcons(p.assets)}${infraIndicator}
+                                ${isAutoProspect(p) && p.company ? `<div style="font-size:0.75rem;color:var(--text-dim)">${p.company}</div>` : ''}
+                            </div>
                         </div>
                     </td>
-                    <td>${p.name || '-'}</td>
-                    <td>${sourceBadge(p.source)}</td>
+                    <td>${isAutoProspect(p) ? (p.company || '-') : (p.name || '-')}</td>
+                    <td>${isAutoProspect(p) ? '-' : sourceBadge(p.source)}</td>
                     <td>${p.sector}</td>
                     <td><span class="badge ${p.status}"><span class="badge-dot"></span>${statusLabel(p.status)}</span></td>
                     <td>${fmtXPF(p.value)}</td>
@@ -11508,6 +11511,13 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             buildFilterDropdowns();
             renderProspectsViews();
             toggleDropdown('status-dropdown');
+        }
+
+        function isAutoProspect(p) {
+            return p.source === 'messenger' || p.source === 'landing-page';
+        }
+        function prospectDisplayName(p) {
+            return isAutoProspect(p) ? (p.name || p.company || 'Visiteur') : p.company;
         }
 
         function sourceBadge(source) {
