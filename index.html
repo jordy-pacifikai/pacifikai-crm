@@ -4765,34 +4765,74 @@
         .blog-article-status.draft { background: var(--bg-muted); color: var(--text-muted); }
         .blog-article-status.ready { background: var(--yellow); color: var(--text); }
 
-        /* Veille Polynesie badges */
-        .veille-badge-new {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.625rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--orange, #f59e0b);
-        }
-        .veille-badge-expiring {
-            background: rgba(196, 90, 90, 0.15);
-            color: var(--red);
-        }
-        .veille-relevance-bar {
-            height: 4px;
-            border-radius: 2px;
-            background: var(--bg-muted);
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-        .veille-relevance-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.3s ease;
+        /* === VEILLE POLYNESIE === */
+        .veille-card { position: relative; overflow: hidden; padding-left: 3px; }
+        .veille-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+        .veille-card.high-relevance::before { background: var(--green); }
+        .veille-card.medium-relevance::before { background: var(--orange, #f59e0b); }
+        .veille-card.low-relevance::before { background: var(--text-dim); }
+        .veille-card-header { padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+        .veille-card-header-left { display: flex; align-items: center; gap: 0.375rem; flex-wrap: wrap; }
+        .veille-card-body { padding: 0.75rem 1rem 0.5rem; }
+        .veille-card-footer { padding: 0.5rem 1rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+        .veille-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.5rem; }
+        .veille-badge-new { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(245, 158, 11, 0.15); color: var(--orange, #f59e0b); }
+        .veille-badge-expiring { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .veille-badge-expired { background: var(--bg-muted); color: var(--text-dim); font-size: 0.625rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+        .veille-source-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+        .veille-source-badge.lexpol { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .veille-source-badge.france-marches { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+        .veille-source-badge.france-travail { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .veille-source-badge.fenuajob { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .veille-source-badge.dgrh { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .veille-contract-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.625rem; font-weight: 600; text-transform: uppercase; }
+        .veille-contract-badge.cdi { background: rgba(16, 185, 129, 0.15); color: var(--green); }
+        .veille-contract-badge.cdd { background: rgba(59, 130, 246, 0.15); color: var(--blue, #3b82f6); }
+        .veille-contract-badge.stage { background: rgba(139, 92, 246, 0.15); color: var(--purple, #8b5cf6); }
+        .veille-contract-badge.alternance { background: rgba(6, 182, 212, 0.15); color: var(--cyan, #06b6d4); }
+        .veille-contract-badge.interim { background: rgba(245, 158, 11, 0.15); color: var(--orange, #f59e0b); }
+        .veille-score { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; font-size: 0.6875rem; font-weight: 700; border: 2px solid; flex-shrink: 0; }
+        .veille-score.high { border-color: var(--green); color: var(--green); }
+        .veille-score.medium { border-color: var(--orange, #f59e0b); color: var(--orange, #f59e0b); }
+        .veille-score.low { border-color: var(--text-dim); color: var(--text-dim); }
+        .veille-amount { font-size: 0.875rem; font-weight: 700; color: var(--gold); margin-top: 0.375rem; }
+        .veille-org { font-size: 0.8125rem; color: var(--cyan, #06b6d4); font-weight: 500; margin-bottom: 0.25rem; }
+        .veille-skill-chip { font-size: 0.625rem; padding: 2px 8px; background: rgba(59, 130, 246, 0.1); color: var(--blue, #3b82f6); border-radius: 12px; white-space: nowrap; }
+        .veille-tag-chip { font-size: 0.625rem; padding: 2px 8px; background: rgba(26, 58, 58, 0.3); color: var(--cyan, #06b6d4); border-radius: 12px; white-space: nowrap; }
+        .veille-deadline { font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem; }
+        .veille-deadline.urgent { color: var(--red); font-weight: 600; }
+        .veille-deadline.soon { color: var(--orange, #f59e0b); font-weight: 500; }
+        .veille-deadline.ok { color: var(--text-muted); }
+        .veille-view-toggle { display: flex; gap: 2px; background: var(--bg-muted); border-radius: 6px; padding: 2px; }
+        .veille-view-toggle button { padding: 5px 8px; border: none; background: none; border-radius: 4px; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; }
+        .veille-view-toggle button.active { background: var(--bg-subtle); color: var(--text); }
+        .veille-view-toggle button svg { width: 14px; height: 14px; }
+        .veille-list { display: flex; flex-direction: column; gap: 0.375rem; }
+        .veille-list-item { display: grid; grid-template-columns: 34px 1fr auto auto; gap: 0.75rem; align-items: center; padding: 0.625rem 1rem; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; position: relative; padding-left: calc(1rem + 3px); }
+        .veille-list-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 8px 0 0 8px; }
+        .veille-list-item.high-relevance::before { background: var(--green); }
+        .veille-list-item.medium-relevance::before { background: var(--orange, #f59e0b); }
+        .veille-list-item.low-relevance::before { background: var(--text-dim); }
+        .veille-list-item:hover { border-color: var(--accent); }
+        .veille-list-title { font-size: 0.8125rem; font-weight: 600; line-height: 1.3; }
+        .veille-list-subtitle { font-size: 0.6875rem; color: var(--text-muted); margin-top: 1px; }
+        .veille-list-meta { font-size: 0.75rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+        .veille-list-badges { display: flex; align-items: center; gap: 0.375rem; }
+        .veille-filter-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+        .veille-ai-summary { padding: 0.75rem 1rem; background: rgba(6, 182, 212, 0.08); border-left: 3px solid var(--cyan, #06b6d4); border-radius: 0 6px 6px 0; margin-bottom: 1rem; font-size: 0.8125rem; line-height: 1.5; }
+        .veille-ai-summary-label { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan, #06b6d4); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.375rem; }
+        .veille-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+        .veille-detail-field-label { font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
+        .veille-detail-field-value { font-size: 0.8125rem; font-weight: 500; }
+        .veille-modal-header { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+        .veille-modal-header .veille-score { width: 48px; height: 48px; font-size: 0.875rem; border-width: 3px; }
+        .veille-modal-header-info { flex: 1; }
+        .veille-modal-header-badges { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        @media (max-width: 900px) { #view-veille .stats-row { grid-template-columns: repeat(3, 1fr) !important; } }
+        @media (max-width: 640px) {
+            #view-veille .stats-row { grid-template-columns: repeat(2, 1fr) !important; }
+            .veille-list-item { grid-template-columns: 30px 1fr auto; }
+            .veille-list-item .veille-list-badges { display: none; }
         }
 
         .blog-article-content {
@@ -8356,16 +8396,6 @@
                         <p>Appels d'offres et offres d'emploi — <span id="veille-last-sync"></span></p>
                     </div>
                     <div class="header-actions">
-                        <input type="text" class="filter-select" id="veille-search"
-                               placeholder="Rechercher..."
-                               oninput="filterVeilleEntries()"
-                               style="min-width: 200px; background-image: none; padding-right: 0.875rem;" />
-                        <select class="filter-select" id="veille-source-filter" onchange="filterVeilleEntries()">
-                            <option value="all">Toutes sources</option>
-                        </select>
-                        <select class="filter-select" id="veille-category-filter" onchange="filterVeilleEntries()">
-                            <option value="all">Toutes categories</option>
-                        </select>
                         <button class="btn btn-ghost" onclick="loadVeilleData()" title="Rafraichir">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                             Sync
@@ -8375,20 +8405,20 @@
 
                 <div class="content" style="padding: 1.5rem 2rem;">
                     <!-- KPI Cards -->
-                    <div class="stats-row" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-                        <div class="stat">
+                    <div class="stats-row" id="veille-kpi-row" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="stat" style="cursor:pointer;" onclick="filterVeilleByKpi('ao')">
                             <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Appels d'Offres</div>
                             <div class="stat-value" style="color: var(--blue, #3b82f6);" id="kpi-veille-ao-total">0</div>
                         </div>
-                        <div class="stat">
+                        <div class="stat" style="cursor:pointer;" onclick="filterVeilleByKpi('oe')">
                             <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Offres d'Emploi</div>
                             <div class="stat-value" style="color: var(--green);" id="kpi-veille-oe-total">0</div>
                         </div>
-                        <div class="stat">
+                        <div class="stat" style="cursor:pointer;" onclick="filterVeilleByKpi('new')">
                             <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Nouveaux</div>
                             <div class="stat-value" style="color: var(--orange, #f59e0b);" id="kpi-veille-new">0</div>
                         </div>
-                        <div class="stat">
+                        <div class="stat" style="cursor:pointer;" onclick="filterVeilleByKpi('expiring')">
                             <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Expirent bientot</div>
                             <div class="stat-value" style="color: var(--red);" id="kpi-veille-expiring">0</div>
                         </div>
@@ -8398,8 +8428,51 @@
                         </div>
                     </div>
 
+                    <!-- Filter bar -->
+                    <div class="veille-filter-bar">
+                        <input type="text" class="filter-select" id="veille-search"
+                               placeholder="Rechercher titre, org, tags..."
+                               oninput="filterVeilleEntries()"
+                               style="min-width: 200px; background-image: none; padding-right: 0.875rem; flex: 1; max-width: 280px;" />
+                        <select class="filter-select" id="veille-status-filter" onchange="filterVeilleEntries()">
+                            <option value="all">Tous statuts</option>
+                            <option value="active" selected>Actifs</option>
+                            <option value="expired">Expires</option>
+                        </select>
+                        <select class="filter-select" id="veille-source-filter" onchange="filterVeilleEntries()">
+                            <option value="all">Toutes sources</option>
+                        </select>
+                        <select class="filter-select" id="veille-category-filter" onchange="filterVeilleEntries()">
+                            <option value="all">Toutes categories</option>
+                        </select>
+                        <select class="filter-select" id="veille-score-filter" onchange="filterVeilleEntries()">
+                            <option value="0">Score: Tous</option>
+                            <option value="50">Score 50+</option>
+                            <option value="70">Score 70+</option>
+                            <option value="80">Score 80+</option>
+                        </select>
+                        <select class="filter-select" id="veille-sort" onchange="filterVeilleEntries()">
+                            <option value="score">Tri: Score</option>
+                            <option value="recent">Plus recents</option>
+                            <option value="deadline">Deadline proche</option>
+                            <option value="amount">Montant/Salaire</option>
+                        </select>
+                        <div class="veille-view-toggle">
+                            <button class="active" id="veille-view-grid" onclick="toggleVeilleView('grid')" title="Vue grille">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            </button>
+                            <button id="veille-view-list" onclick="toggleVeilleView('list')" title="Vue liste">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <button class="btn btn-ghost" onclick="resetVeilleFilters()" title="Reinitialiser les filtres" style="padding:0.375rem 0.5rem;font-size:0.75rem;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            Reset
+                        </button>
+                    </div>
+
                     <!-- Sub-tabs -->
-                    <div class="blog-tabs">
+                    <div class="blog-tabs" style="margin-top: 1rem;">
                         <button class="blog-tab active" id="veille-tab-ao" onclick="switchVeilleTab('ao')">
                             Appels d'Offres <span class="blog-tab-count" id="veille-tab-ao-count">0</span>
                         </button>
@@ -8412,7 +8485,7 @@
                     <div id="veille-content-ao">
                         <div class="blog-articles-grid" id="veille-ao-grid">
                             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-dim);">
-                                Clique sur Sync ou attend le chargement automatique...
+                                Chargement...
                             </div>
                         </div>
                     </div>
@@ -8421,7 +8494,7 @@
                     <div id="veille-content-oe" style="display: none;">
                         <div class="blog-articles-grid" id="veille-oe-grid">
                             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-dim);">
-                                Clique sur Sync ou attend le chargement automatique...
+                                Chargement...
                             </div>
                         </div>
                     </div>
@@ -8430,19 +8503,8 @@
 
             <!-- Veille Detail Modal -->
             <div class="modal-overlay" id="veille-detail-modal" style="display: none;" onclick="closeVeilleModal(event)">
-                <div class="edit-content-modal" onclick="event.stopPropagation()" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
-                    <h3>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <span id="veille-modal-title">Detail</span>
-                    </h3>
+                <div class="edit-content-modal" onclick="event.stopPropagation()" style="max-width: 750px; max-height: 90vh; overflow-y: auto;">
                     <div id="veille-modal-body"></div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
-                        <button class="btn btn-ghost" onclick="closeVeilleModal()">Fermer</button>
-                        <a class="btn btn-primary" id="veille-modal-link" href="#" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                            Voir la source
-                        </a>
-                    </div>
                 </div>
             </div>
 
@@ -10714,9 +10776,8 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
         }
 
         function showView(name) {
-            // Arreter le Realtime/polling messages si on quitte l'onglet
+            // Arreter le polling messages si on quitte l'onglet (Realtime reste actif pour le badge)
             if (typeof supabase !== 'undefined') {
-                if (supabase.unsubscribeFromMessenger) supabase.unsubscribeFromMessenger();
                 if (supabase.stopMessengerPolling) supabase.stopMessengerPolling();
             }
 
@@ -19189,13 +19250,17 @@ Reponds UNIQUEMENT avec le texte du post.`;
         }
 
         // Temps reel - Supabase Realtime WebSocket
+        let messengerRealtimeActive = false;
         function startMessengerRealtime() {
-            // Utiliser Realtime WebSocket au lieu du polling
+            // Ne souscrire qu'une seule fois
+            if (messengerRealtimeActive) return;
+
             if (!supabase.subscribeToMessenger) {
                 console.warn('[Messages] Realtime non disponible, fallback polling');
                 return;
             }
 
+            messengerRealtimeActive = true;
             supabase.subscribeToMessenger(
                 // onInsert - nouveau message
                 (msg) => {
@@ -19213,6 +19278,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                             unreadCount: 0
                         };
                         messengerConversations.unshift(conv);
+                        allMessengerConversations.unshift(conv);
                     }
 
                     // Ajouter le message s'il n'existe pas deja
@@ -19223,9 +19289,15 @@ Reponds UNIQUEMENT avec le texte du post.`;
                             role: msg.role || 'user',
                             content: msg.content || '',
                             createdAt: msg.created_at,
-                            read: msg.read || false
+                            read: msg.read || false,
+                            manual: msg.responded_manually || false,
+                            requiresHuman: msg.requires_human || false
                         };
                         conv.messages.push(newMsg);
+
+                        if (newMsg.requiresHuman) {
+                            conv.requiresHuman = true;
+                        }
 
                         if (!conv.lastMessage || new Date(newMsg.createdAt) > new Date(conv.lastMessage.createdAt)) {
                             conv.lastMessage = newMsg;
@@ -19248,7 +19320,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
                         // Si on est sur cette conversation, afficher le message
                         if (currentConversationId === senderId) {
-                            renderChatMessages(conv);
+                            selectConversation(senderId);
                         }
                     }
                 },
@@ -19263,6 +19335,8 @@ Reponds UNIQUEMENT avec le texte du post.`;
                             existingMsg.content = msg.content;
                         }
                         renderConversationsList();
+                        updateMessagesKPIs();
+                        updateNavMessagesCount();
                     }
                 }
             );
@@ -19513,6 +19587,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 if (prospect) {
                     await supabase.update('messenger_prospects', prospect.id, { archived: true });
                 }
+                // Marquer comme archived dans allMessengerConversations
+                const archivedConv = allMessengerConversations.find(c => c.senderId === currentConversationId);
+                if (archivedConv) archivedConv.archived = true;
                 messengerConversations = messengerConversations.filter(c => c.senderId !== currentConversationId);
                 currentConversationId = null;
                 document.querySelector('.chat-detail-empty').style.display = 'flex';
@@ -21687,14 +21764,16 @@ Reponds UNIQUEMENT avec le texte du post.`;
         let veilleAppelsOffres = [];
         let veilleOffresEmploi = [];
         let currentVeilleTab = 'ao';
+        let currentVeilleView = 'grid';
+        let veilleKpiFilter = null;
 
         async function loadVeilleData() {
             try {
                 showToast('Chargement de la veille...');
 
                 const [ao, oe] = await Promise.all([
-                    supabase.getAppelsOffres({ status: 'eq.active' }),
-                    supabase.getOffresEmploi({ status: 'eq.active' })
+                    supabase.getAppelsOffres({}),
+                    supabase.getOffresEmploi({})
                 ]);
 
                 veilleAppelsOffres = (ao || []).map(r => ({
@@ -21748,8 +21827,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 updateVeilleStats();
 
                 const total = veilleAppelsOffres.length + veilleOffresEmploi.length;
+                const activeCount = veilleAppelsOffres.filter(a => a.status === 'active').length + veilleOffresEmploi.filter(o => o.status === 'active').length;
                 const syncEl = document.getElementById('veille-last-sync');
-                if (syncEl) syncEl.textContent = total + ' entrees actives';
+                if (syncEl) syncEl.textContent = total + ' entrees (' + activeCount + ' actives)';
                 if (total > 0) showToast(total + ' entrees chargees');
                 else showToast('Aucune entree (lance le workflow n8n pour scraper)');
 
@@ -21787,21 +21867,70 @@ Reponds UNIQUEMENT avec le texte du post.`;
         }
 
         function getFilteredVeilleData(dataset) {
-            const srcFilter = document.getElementById('veille-source-filter')?.value || 'all';
-            const catFilter = document.getElementById('veille-category-filter')?.value || 'all';
-            const search = (document.getElementById('veille-search')?.value || '').toLowerCase();
+            const srcFilter = document.getElementById('veille-source-filter') ? document.getElementById('veille-source-filter').value : 'all';
+            const catFilter = document.getElementById('veille-category-filter') ? document.getElementById('veille-category-filter').value : 'all';
+            const statusFilter = document.getElementById('veille-status-filter') ? document.getElementById('veille-status-filter').value : 'active';
+            const scoreMin = parseInt(document.getElementById('veille-score-filter') ? document.getElementById('veille-score-filter').value : '0') || 0;
+            const sortBy = document.getElementById('veille-sort') ? document.getElementById('veille-sort').value : 'score';
+            const search = (document.getElementById('veille-search') ? document.getElementById('veille-search').value : '').toLowerCase();
             let items = [...dataset];
-            if (srcFilter !== 'all') items = items.filter(i => i.source === srcFilter);
-            if (catFilter !== 'all') items = items.filter(i => i.category === catFilter);
-            if (search) {
-                items = items.filter(i =>
-                    i.title.toLowerCase().includes(search) ||
-                    (i.description || '').toLowerCase().includes(search) ||
-                    (i.organization || '').toLowerCase().includes(search) ||
-                    (i.company || '').toLowerCase().includes(search) ||
-                    (i.tags || []).some(t => t.toLowerCase().includes(search))
-                );
+
+            // KPI filter (click on KPI cards)
+            if (veilleKpiFilter === 'new') {
+                items = items.filter(function(i) { return i.isNew; });
+            } else if (veilleKpiFilter === 'expiring') {
+                items = items.filter(function(i) {
+                    if (!i.deadline) return false;
+                    var diff = new Date(i.deadline) - new Date();
+                    return diff >= 0 && diff <= 7 * 86400000;
+                });
             }
+
+            // Status filter
+            if (statusFilter !== 'all') {
+                items = items.filter(function(i) { return i.status === statusFilter; });
+            }
+
+            // Source filter
+            if (srcFilter !== 'all') items = items.filter(function(i) { return i.source === srcFilter; });
+
+            // Category filter
+            if (catFilter !== 'all') items = items.filter(function(i) { return i.category === catFilter; });
+
+            // Score minimum
+            if (scoreMin > 0) items = items.filter(function(i) { return i.relevanceScore >= scoreMin; });
+
+            // Text search
+            if (search) {
+                items = items.filter(function(i) {
+                    return i.title.toLowerCase().includes(search) ||
+                        (i.description || '').toLowerCase().includes(search) ||
+                        (i.organization || '').toLowerCase().includes(search) ||
+                        (i.company || '').toLowerCase().includes(search) ||
+                        (i.tags || []).some(function(t) { return t.toLowerCase().includes(search); }) ||
+                        (i.skills || []).some(function(s) { return s.toLowerCase().includes(search); });
+                });
+            }
+
+            // Sort
+            items.sort(function(a, b) {
+                if (sortBy === 'score') return b.relevanceScore - a.relevanceScore;
+                if (sortBy === 'recent') return new Date(b.publicationDate || b.scrapedAt || 0) - new Date(a.publicationDate || a.scrapedAt || 0);
+                if (sortBy === 'deadline') {
+                    var da = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+                    var db = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+                    return da - db;
+                }
+                if (sortBy === 'amount') {
+                    var amtA = a.estimatedAmount || 0;
+                    var amtB = b.estimatedAmount || 0;
+                    if (!amtA && a.salaryText) amtA = parseInt(a.salaryText.replace(/\D/g, '')) || 0;
+                    if (!amtB && b.salaryText) amtB = parseInt(b.salaryText.replace(/\D/g, '')) || 0;
+                    return amtB - amtA;
+                }
+                return 0;
+            });
+
             return items;
         }
 
@@ -21820,6 +21949,29 @@ Reponds UNIQUEMENT avec le texte du post.`;
             else renderVeilleOE();
         }
 
+        function getVeilleRelevanceClass(score) {
+            if (score >= 70) return 'high';
+            if (score >= 40) return 'medium';
+            return 'low';
+        }
+
+        function getVeilleDeadlineInfo(deadline) {
+            if (!deadline) return { text: 'Pas de deadline', cssClass: 'ok' };
+            const daysLeft = Math.ceil((new Date(deadline) - new Date()) / 86400000);
+            if (daysLeft < 0) return { text: 'Expire', cssClass: 'urgent' };
+            if (daysLeft <= 3) return { text: 'J-' + daysLeft, cssClass: 'urgent' };
+            if (daysLeft <= 7) return { text: 'J-' + daysLeft, cssClass: 'soon' };
+            return { text: new Date(deadline).toLocaleDateString('fr-FR'), cssClass: 'ok' };
+        }
+
+        function isVeilleUrlValid(url) {
+            if (!url) return false;
+            if (/\d{13,}/.test(url)) return false;
+            if (url.includes('Date.now()')) return false;
+            if (url === '#' || url === '') return false;
+            return true;
+        }
+
         function renderVeilleAO() {
             const container = document.getElementById('veille-ao-grid');
             if (!container) return;
@@ -21832,32 +21984,67 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 return;
             }
 
-            container.innerHTML = items.map(ao => {
-                const daysLeft = ao.deadline ? Math.ceil((new Date(ao.deadline) - new Date()) / 86400000) : null;
-                const isExpiring = daysLeft !== null && daysLeft <= 7 && daysLeft >= 0;
-                const isExpired = daysLeft !== null && daysLeft < 0;
-                const srcLabels = { lexpol: 'LEXPOL', france_marches: 'FM' };
-                const relColor = ao.relevanceScore >= 70 ? 'var(--green)' : ao.relevanceScore >= 40 ? 'var(--orange, #f59e0b)' : 'var(--text-muted)';
+            if (currentVeilleView === 'list') {
+                container.className = 'veille-list';
+                container.innerHTML = items.map(ao => {
+                    const rel = getVeilleRelevanceClass(ao.relevanceScore);
+                    const dl = getVeilleDeadlineInfo(ao.deadline);
+                    return '<div class="veille-list-item ' + rel + '-relevance" onclick="openVeilleDetail(\'ao\',\'' + ao.id + '\')">' +
+                        '<div class="veille-score ' + rel + '">' + ao.relevanceScore + '</div>' +
+                        '<div>' +
+                            '<div class="veille-list-title">' + ao.title + '</div>' +
+                            '<div class="veille-list-subtitle">' + (ao.organization || '') + '</div>' +
+                        '</div>' +
+                        '<div class="veille-list-meta">' +
+                            '<span class="veille-deadline ' + dl.cssClass + '">' +
+                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ' +
+                                dl.text +
+                            '</span>' +
+                            (ao.estimatedAmount ? '<span class="veille-amount">' + new Intl.NumberFormat('fr-FR').format(ao.estimatedAmount) + ' XPF</span>' : '') +
+                        '</div>' +
+                        '<div class="veille-list-badges">' +
+                            '<span class="veille-source-badge ' + (ao.source || '').replace('_', '-') + '">' + ({'lexpol':'LEXPOL','france_marches':'FM'}[ao.source] || ao.source) + '</span>' +
+                            (ao.isNew ? '<span class="veille-badge-new">NEW</span>' : '') +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+            } else {
+                container.className = 'blog-articles-grid';
+                container.innerHTML = items.map(ao => {
+                    const rel = getVeilleRelevanceClass(ao.relevanceScore);
+                    const dl = getVeilleDeadlineInfo(ao.deadline);
+                    const srcLabels = { lexpol: 'LEXPOL', france_marches: 'FM' };
+                    const desc = (ao.description || ao.aiSummary || 'Pas de description').substring(0, 140);
 
-                return '<div class="blog-article-card" onclick="openVeilleDetail(\'ao\',\'' + ao.id + '\')" style="cursor:pointer;">' +
-                    '<div class="blog-article-content" style="padding:1rem;">' +
-                    '<div class="blog-article-meta">' +
-                    '<span class="blog-article-status ' + (isExpired ? 'draft' : 'published') + '">' + (srcLabels[ao.source] || ao.source) + '</span>' +
-                    (ao.isNew ? ' <span class="veille-badge-new">NOUVEAU</span>' : '') +
-                    (isExpiring ? ' <span class="veille-badge-new veille-badge-expiring">J-' + daysLeft + '</span>' : '') +
-                    (ao.category ? ' <span style="font-size:0.6875rem;color:var(--text-muted);">' + ao.category + '</span>' : '') +
-                    '</div>' +
-                    '<h3 class="blog-article-title" style="margin:0.5rem 0;">' + ao.title + '</h3>' +
-                    (ao.organization ? '<p style="font-size:0.75rem;color:var(--cyan, #06b6d4);margin-bottom:0.25rem;font-weight:500;">' + ao.organization + '</p>' : '') +
-                    '<p class="blog-article-excerpt">' + ((ao.description || ao.aiSummary || 'Pas de description').substring(0, 150)) + ((ao.description || '').length > 150 ? '...' : '') + '</p>' +
-                    (ao.estimatedAmount ? '<p style="font-size:0.8125rem;font-weight:600;color:var(--gold);margin-top:0.375rem;">' + new Intl.NumberFormat('fr-FR').format(ao.estimatedAmount) + ' XPF</p>' : '') +
-                    '<div class="blog-article-footer" style="margin-top:0.75rem;">' +
-                    '<span>' + (ao.deadline ? 'Limite: ' + new Date(ao.deadline).toLocaleDateString('fr-FR') : 'Pas de deadline') + '</span>' +
-                    '<span style="font-size:0.6875rem;color:' + relColor + ';font-weight:600;">' + ao.relevanceScore + '%</span>' +
-                    '</div>' +
-                    '<div class="veille-relevance-bar"><div class="veille-relevance-fill" style="width:' + ao.relevanceScore + '%;background:' + relColor + ';"></div></div>' +
-                    '</div></div>';
-            }).join('');
+                    return '<div class="veille-card ' + rel + '-relevance' + (ao.status === 'expired' ? ' expired' : '') + '" onclick="openVeilleDetail(\'ao\',\'' + ao.id + '\')">' +
+                        '<div class="veille-card-header">' +
+                            '<div class="veille-card-header-left">' +
+                                '<span class="veille-source-badge ' + (ao.source || '').replace('_', '-') + '">' + (srcLabels[ao.source] || ao.source) + '</span>' +
+                                (ao.isNew ? '<span class="veille-badge-new">NOUVEAU</span>' : '') +
+                                (dl.cssClass === 'urgent' ? '<span class="veille-badge-expiring">J-' + (Math.ceil((new Date(ao.deadline) - new Date()) / 86400000)) + '</span>' : '') +
+                                (ao.status === 'expired' ? '<span class="veille-badge-expired">EXPIRE</span>' : '') +
+                            '</div>' +
+                            '<div class="veille-score ' + rel + '">' + ao.relevanceScore + '</div>' +
+                        '</div>' +
+                        '<div class="veille-card-body">' +
+                            '<h3 style="font-size:0.9375rem;font-weight:600;margin-bottom:0.375rem;line-height:1.3;">' + ao.title + '</h3>' +
+                            (ao.organization ? '<div class="veille-org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> ' + ao.organization + '</div>' : '') +
+                            '<p style="font-size:0.8125rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">' + desc + (desc.length >= 140 ? '...' : '') + '</p>' +
+                            (ao.estimatedAmount ? '<div class="veille-amount">' + new Intl.NumberFormat('fr-FR').format(ao.estimatedAmount) + ' XPF</div>' : '') +
+                        '</div>' +
+                        '<div class="veille-card-footer">' +
+                            '<span class="veille-deadline ' + dl.cssClass + '">' +
+                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ' +
+                                dl.text +
+                            '</span>' +
+                            '<div class="veille-card-tags">' +
+                                (ao.category ? '<span class="veille-tag-chip">' + ao.category + '</span>' : '') +
+                                (ao.tags && ao.tags.length > 0 ? ao.tags.slice(0, 2).map(function(t) { return '<span class="veille-tag-chip">' + t + '</span>'; }).join('') : '') +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+            }
         }
 
         function renderVeilleOE() {
@@ -21872,34 +22059,64 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 return;
             }
 
-            const contractColors = { CDI: 'var(--green)', CDD: 'var(--blue, #3b82f6)', Stage: 'var(--purple, #8b5cf6)', Alternance: 'var(--cyan, #06b6d4)' };
-            const srcLabels = { france_travail: 'FT', fenuajob: 'FenuaJob', dgrh: 'DGRH', tahiti_annonces: 'T-A' };
+            if (currentVeilleView === 'list') {
+                container.className = 'veille-list';
+                container.innerHTML = items.map(oe => {
+                    const rel = getVeilleRelevanceClass(oe.relevanceScore);
+                    const ctClass = (oe.contractType || '').toLowerCase().replace(/[^a-z]/g, '');
+                    return '<div class="veille-list-item ' + rel + '-relevance" onclick="openVeilleDetail(\'oe\',\'' + oe.id + '\')">' +
+                        '<div class="veille-score ' + rel + '">' + oe.relevanceScore + '</div>' +
+                        '<div>' +
+                            '<div class="veille-list-title">' + oe.title + '</div>' +
+                            '<div class="veille-list-subtitle">' + (oe.company || '') + ' — ' + (oe.location || 'Tahiti') + '</div>' +
+                        '</div>' +
+                        '<div class="veille-list-meta">' +
+                            (oe.contractType ? '<span class="veille-contract-badge ' + ctClass + '">' + oe.contractType + '</span>' : '') +
+                            (oe.salaryText ? '<span class="veille-amount">' + oe.salaryText + '</span>' : '') +
+                        '</div>' +
+                        '<div class="veille-list-badges">' +
+                            '<span class="veille-source-badge ' + (oe.source || '').replace('_', '-') + '">' + ({'france_travail':'FT','fenuajob':'FenuaJob','dgrh':'DGRH','tahiti_annonces':'T-A'}[oe.source] || oe.source) + '</span>' +
+                            (oe.isNew ? '<span class="veille-badge-new">NEW</span>' : '') +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+            } else {
+                container.className = 'blog-articles-grid';
+                container.innerHTML = items.map(oe => {
+                    const rel = getVeilleRelevanceClass(oe.relevanceScore);
+                    const srcLabels = { france_travail: 'FT', fenuajob: 'FenuaJob', dgrh: 'DGRH', tahiti_annonces: 'T-A' };
+                    const ctClass = (oe.contractType || '').toLowerCase().replace(/[^a-z]/g, '');
+                    const desc = (oe.description || oe.aiSummary || 'Pas de description').substring(0, 140);
 
-            container.innerHTML = items.map(oe => {
-                const relColor = oe.relevanceScore >= 70 ? 'var(--green)' : oe.relevanceScore >= 40 ? 'var(--orange, #f59e0b)' : 'var(--text-muted)';
-
-                return '<div class="blog-article-card" onclick="openVeilleDetail(\'oe\',\'' + oe.id + '\')" style="cursor:pointer;">' +
-                    '<div class="blog-article-content" style="padding:1rem;">' +
-                    '<div class="blog-article-meta">' +
-                    '<span class="blog-article-status published">' + (srcLabels[oe.source] || oe.source) + '</span>' +
-                    (oe.isNew ? ' <span class="veille-badge-new">NOUVEAU</span>' : '') +
-                    (oe.contractType ? ' <span style="font-size:0.6875rem;font-weight:600;color:' + (contractColors[oe.contractType] || 'var(--text-muted)') + ';">' + oe.contractType + '</span>' : '') +
-                    '</div>' +
-                    '<h3 class="blog-article-title" style="margin:0.5rem 0;">' + oe.title + '</h3>' +
-                    (oe.company ? '<p style="font-size:0.75rem;color:var(--cyan, #06b6d4);margin-bottom:0.25rem;font-weight:500;">' + oe.company + '</p>' : '') +
-                    '<p class="blog-article-excerpt">' + ((oe.description || oe.aiSummary || 'Pas de description').substring(0, 150)) + ((oe.description || '').length > 150 ? '...' : '') + '</p>' +
-                    (oe.salaryText ? '<p style="font-size:0.8125rem;font-weight:600;color:var(--gold);margin-top:0.375rem;">' + oe.salaryText + '</p>' : '') +
-                    (oe.skills && oe.skills.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:0.5rem;">' +
-                        oe.skills.slice(0, 3).map(s => '<span style="font-size:0.625rem;padding:2px 6px;background:var(--bg-muted);border-radius:4px;color:var(--text-muted);">' + s + '</span>').join('') +
-                        (oe.skills.length > 3 ? '<span style="font-size:0.625rem;color:var(--text-dim);">+' + (oe.skills.length - 3) + '</span>' : '') +
-                    '</div>' : '') +
-                    '<div class="blog-article-footer" style="margin-top:0.75rem;">' +
-                    '<span>' + (oe.location || 'Tahiti') + '</span>' +
-                    '<span style="font-size:0.6875rem;color:' + relColor + ';font-weight:600;">' + oe.relevanceScore + '%</span>' +
-                    '</div>' +
-                    '<div class="veille-relevance-bar"><div class="veille-relevance-fill" style="width:' + oe.relevanceScore + '%;background:' + relColor + ';"></div></div>' +
-                    '</div></div>';
-            }).join('');
+                    return '<div class="veille-card ' + rel + '-relevance' + (oe.status === 'expired' ? ' expired' : '') + '" onclick="openVeilleDetail(\'oe\',\'' + oe.id + '\')">' +
+                        '<div class="veille-card-header">' +
+                            '<div class="veille-card-header-left">' +
+                                '<span class="veille-source-badge ' + (oe.source || '').replace('_', '-') + '">' + (srcLabels[oe.source] || oe.source) + '</span>' +
+                                (oe.contractType ? '<span class="veille-contract-badge ' + ctClass + '">' + oe.contractType + '</span>' : '') +
+                                (oe.isNew ? '<span class="veille-badge-new">NOUVEAU</span>' : '') +
+                                (oe.status === 'expired' ? '<span class="veille-badge-expired">EXPIRE</span>' : '') +
+                            '</div>' +
+                            '<div class="veille-score ' + rel + '">' + oe.relevanceScore + '</div>' +
+                        '</div>' +
+                        '<div class="veille-card-body">' +
+                            '<h3 style="font-size:0.9375rem;font-weight:600;margin-bottom:0.375rem;line-height:1.3;">' + oe.title + '</h3>' +
+                            (oe.company ? '<div class="veille-org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> ' + oe.company + '</div>' : '') +
+                            '<p style="font-size:0.8125rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">' + desc + (desc.length >= 140 ? '...' : '') + '</p>' +
+                            (oe.salaryText ? '<div class="veille-amount">' + oe.salaryText + '</div>' : '') +
+                        '</div>' +
+                        '<div class="veille-card-footer">' +
+                            '<span style="font-size:0.75rem;color:var(--text-muted);">' +
+                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ' +
+                                (oe.location || 'Tahiti') +
+                            '</span>' +
+                            '<div class="veille-card-tags">' +
+                                (oe.skills && oe.skills.length > 0 ? oe.skills.slice(0, 3).map(function(s) { return '<span class="veille-skill-chip">' + s + '</span>'; }).join('') : '') +
+                                (oe.skills && oe.skills.length > 3 ? '<span style="font-size:0.625rem;color:var(--text-dim);">+' + (oe.skills.length - 3) + '</span>' : '') +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+            }
         }
 
         function updateVeilleStats() {
@@ -21934,67 +22151,161 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         function veilleDetailField(label, value) {
             if (!value || value === '-') return '';
-            return '<div><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:2px;">' + label + '</div>' +
-                '<div style="font-size:0.8125rem;font-weight:500;">' + value + '</div></div>';
+            return '<div><div class="veille-detail-field-label">' + label + '</div>' +
+                '<div class="veille-detail-field-value">' + value + '</div></div>';
         }
 
         function openVeilleDetail(type, id) {
-            const item = type === 'ao' ?
-                veilleAppelsOffres.find(a => a.id === id) :
-                veilleOffresEmploi.find(o => o.id === id);
+            var item = type === 'ao' ?
+                veilleAppelsOffres.find(function(a) { return a.id === id; }) :
+                veilleOffresEmploi.find(function(o) { return o.id === id; });
             if (!item) return;
 
-            document.getElementById('veille-modal-title').textContent = type === 'ao' ? 'Appel d\'Offres' : 'Offre d\'Emploi';
-            const link = document.getElementById('veille-modal-link');
-            link.href = item.sourceUrl || '#';
-            link.style.display = item.sourceUrl ? 'flex' : 'none';
+            var body = document.getElementById('veille-modal-body');
+            var fmtDate = function(d) { return d ? new Date(d).toLocaleDateString('fr-FR') : '-'; };
+            var rel = getVeilleRelevanceClass(item.relevanceScore);
+            var srcLabels = { lexpol: 'LEXPOL', france_marches: 'France Marches', france_travail: 'France Travail', fenuajob: 'FenuaJob', dgrh: 'DGRH', tahiti_annonces: 'Tahiti Annonces' };
+            var urlValid = isVeilleUrlValid(item.sourceUrl);
 
-            const body = document.getElementById('veille-modal-body');
-            const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-FR') : '-';
+            // Modal header with score + title + badges
+            var html = '<div class="veille-modal-header">' +
+                '<div class="veille-score ' + rel + '" style="width:52px;height:52px;font-size:1rem;">' + item.relevanceScore + '</div>' +
+                '<div class="veille-modal-header-info">' +
+                    '<h2 style="font-size:1.125rem;font-weight:600;margin:0 0 0.25rem 0;line-height:1.3;">' + item.title + '</h2>' +
+                    (type === 'ao' && item.organization ? '<div class="veille-org">' + item.organization + '</div>' : '') +
+                    (type === 'oe' && item.company ? '<div class="veille-org">' + item.company + '</div>' : '') +
+                '</div>' +
+            '</div>' +
+            '<div class="veille-modal-header-badges">' +
+                '<span class="veille-source-badge ' + (item.source || '').replace('_', '-') + '">' + (srcLabels[item.source] || item.source) + '</span>' +
+                (item.category ? '<span class="veille-tag-chip">' + item.category + '</span>' : '') +
+                (item.status === 'expired' ? '<span class="veille-badge-expired">EXPIRE</span>' : '') +
+                (item.isNew ? '<span class="veille-badge-new">NOUVEAU</span>' : '') +
+                (type === 'oe' && item.contractType ? '<span class="veille-contract-badge ' + (item.contractType || '').toLowerCase().replace(/[^a-z]/g, '') + '">' + item.contractType + '</span>' : '') +
+            '</div>';
 
-            if (type === 'ao') {
-                body.innerHTML =
-                    '<div style="margin-bottom:1rem;"><h2 style="font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;">' + item.title + '</h2>' +
-                    (item.organization ? '<p style="color:var(--cyan, #06b6d4);font-weight:500;">' + item.organization + '</p>' : '') + '</div>' +
-                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">' +
-                    veilleDetailField('Reference', item.reference) +
-                    veilleDetailField('Categorie', item.category) +
-                    veilleDetailField('Type', item.type) +
-                    veilleDetailField('Source', (item.source || '').toUpperCase()) +
-                    veilleDetailField('Publication', fmtDate(item.publicationDate)) +
-                    veilleDetailField('Date limite', fmtDate(item.deadline)) +
-                    (item.estimatedAmount ? veilleDetailField('Montant estime', new Intl.NumberFormat('fr-FR').format(item.estimatedAmount) + ' XPF') : '') +
-                    veilleDetailField('Score pertinence', item.relevanceScore + '%') +
+            // AI Summary (if available)
+            if (item.aiSummary) {
+                html += '<div class="veille-ai-summary">' +
+                    '<div class="veille-ai-summary-label">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M8 6a4 4 0 0 1 8 0"/><path d="M17 12.5c1.77.77 3 2.53 3 4.5a5 5 0 0 1-10 0c0-1.97 1.23-3.73 3-4.5"/><path d="M7 12.5C5.23 13.27 4 15.03 4 17a5 5 0 0 0 10 0"/></svg>' +
+                        ' Resume IA' +
                     '</div>' +
-                    (item.description ? '<div style="margin-bottom:1rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Description</div><p style="font-size:0.8125rem;color:var(--text);line-height:1.6;white-space:pre-wrap;">' + item.description + '</p></div>' : '') +
-                    (item.tags && item.tags.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:0.75rem;">' + item.tags.map(t => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(26,58,58,0.3);color:var(--cyan, #06b6d4);border-radius:4px;">' + t + '</span>').join('') + '</div>' : '') +
-                    '<p style="font-size:0.6875rem;color:var(--text-dim);margin-top:1rem;">Scrape le ' + (item.scrapedAt ? new Date(item.scrapedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-') + '</p>';
-            } else {
-                body.innerHTML =
-                    '<div style="margin-bottom:1rem;"><h2 style="font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;">' + item.title + '</h2>' +
-                    (item.company ? '<p style="color:var(--cyan, #06b6d4);font-weight:500;">' + item.company + '</p>' : '') + '</div>' +
-                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">' +
-                    veilleDetailField('Contrat', item.contractType) +
-                    veilleDetailField('Experience', item.experienceLevel) +
-                    veilleDetailField('Lieu', item.location) +
-                    veilleDetailField('Source', (item.source || '').toUpperCase()) +
-                    veilleDetailField('Categorie', item.category) +
-                    (item.salaryText ? veilleDetailField('Salaire', item.salaryText) : '') +
-                    veilleDetailField('Publication', fmtDate(item.publicationDate)) +
-                    veilleDetailField('Score pertinence', item.relevanceScore + '%') +
-                    '</div>' +
-                    (item.description ? '<div style="margin-bottom:1rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Description</div><p style="font-size:0.8125rem;color:var(--text);line-height:1.6;white-space:pre-wrap;">' + item.description + '</p></div>' : '') +
-                    (item.skills && item.skills.length > 0 ? '<div style="margin-bottom:0.75rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Competences</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' + item.skills.map(s => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(59,130,246,0.15);color:var(--blue, #3b82f6);border-radius:4px;">' + s + '</span>').join('') + '</div></div>' : '') +
-                    (item.tags && item.tags.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem;">' + item.tags.map(t => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(26,58,58,0.3);color:var(--cyan, #06b6d4);border-radius:4px;">' + t + '</span>').join('') + '</div>' : '') +
-                    '<p style="font-size:0.6875rem;color:var(--text-dim);margin-top:1rem;">Scrape le ' + (item.scrapedAt ? new Date(item.scrapedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-') + '</p>';
+                    '<p style="font-size:0.8125rem;line-height:1.6;margin:0;">' + item.aiSummary + '</p>' +
+                '</div>';
             }
 
+            // Detail grid
+            html += '<div class="veille-detail-grid">';
+            if (type === 'ao') {
+                html += veilleDetailField('Reference', item.reference) +
+                    veilleDetailField('Type', item.type) +
+                    veilleDetailField('Source', (srcLabels[item.source] || item.source)) +
+                    veilleDetailField('Publication', fmtDate(item.publicationDate)) +
+                    veilleDetailField('Date limite', fmtDate(item.deadline)) +
+                    (item.estimatedAmount ? veilleDetailField('Montant estime', '<span class="veille-amount">' + new Intl.NumberFormat('fr-FR').format(item.estimatedAmount) + ' XPF</span>') : '');
+            } else {
+                html += veilleDetailField('Contrat', item.contractType) +
+                    veilleDetailField('Experience', item.experienceLevel) +
+                    veilleDetailField('Lieu', item.location) +
+                    veilleDetailField('Source', (srcLabels[item.source] || item.source)) +
+                    (item.salaryText ? veilleDetailField('Salaire', '<span class="veille-amount">' + item.salaryText + '</span>') : '') +
+                    veilleDetailField('Publication', fmtDate(item.publicationDate));
+            }
+            html += '</div>';
+
+            // Description
+            if (item.description) {
+                html += '<div style="margin:1rem 0;">' +
+                    '<div class="veille-detail-field-label">Description</div>' +
+                    '<p style="font-size:0.8125rem;color:var(--text);line-height:1.6;white-space:pre-wrap;margin:0.25rem 0 0 0;">' + item.description + '</p>' +
+                '</div>';
+            }
+
+            // Skills (OE)
+            if (type === 'oe' && item.skills && item.skills.length > 0) {
+                html += '<div style="margin:0.75rem 0;">' +
+                    '<div class="veille-detail-field-label">Competences</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">' +
+                    item.skills.map(function(s) { return '<span class="veille-skill-chip">' + s + '</span>'; }).join('') +
+                '</div></div>';
+            }
+
+            // Tags
+            if (item.tags && item.tags.length > 0) {
+                html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin:0.75rem 0;">' +
+                    item.tags.map(function(t) { return '<span class="veille-tag-chip">' + t + '</span>'; }).join('') +
+                '</div>';
+            }
+
+            // Scraped date
+            html += '<p style="font-size:0.6875rem;color:var(--text-dim);margin-top:1rem;">Scrape le ' +
+                (item.scrapedAt ? new Date(item.scrapedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-') + '</p>';
+
+            // Footer buttons
+            html += '<div style="display:flex;justify-content:space-between;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">' +
+                '<button class="btn btn-ghost" onclick="closeVeilleModal()">Fermer</button>';
+
+            if (urlValid) {
+                html += '<a class="btn btn-primary" href="' + item.sourceUrl + '" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+                    ' Voir sur ' + (srcLabels[item.source] || 'source') +
+                '</a>';
+            } else {
+                html += '<span style="font-size:0.75rem;color:var(--text-dim);display:flex;align-items:center;gap:0.375rem;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+                    ' Source non disponible' +
+                '</span>';
+            }
+
+            html += '</div>';
+
+            body.innerHTML = html;
             document.getElementById('veille-detail-modal').style.display = 'flex';
         }
 
         function closeVeilleModal(event) {
             if (event && event.target !== event.currentTarget) return;
             document.getElementById('veille-detail-modal').style.display = 'none';
+        }
+
+        function toggleVeilleView(mode) {
+            currentVeilleView = mode;
+            var gridBtn = document.getElementById('veille-view-grid');
+            var listBtn = document.getElementById('veille-view-list');
+            if (gridBtn) gridBtn.classList.toggle('active', mode === 'grid');
+            if (listBtn) listBtn.classList.toggle('active', mode === 'list');
+            renderVeilleCurrentTab();
+        }
+
+        function resetVeilleFilters() {
+            veilleKpiFilter = null;
+            var els = {
+                'veille-search': '',
+                'veille-status-filter': 'active',
+                'veille-source-filter': 'all',
+                'veille-category-filter': 'all',
+                'veille-score-filter': '0',
+                'veille-sort': 'score'
+            };
+            Object.keys(els).forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.value = els[id];
+            });
+            renderVeilleCurrentTab();
+            showToast('Filtres reinitialises');
+        }
+
+        function filterVeilleByKpi(kpi) {
+            if (veilleKpiFilter === kpi) {
+                veilleKpiFilter = null;
+            } else {
+                veilleKpiFilter = kpi;
+            }
+            // Switch to correct tab if needed
+            if (kpi === 'ao' && currentVeilleTab !== 'ao') switchVeilleTab('ao');
+            else if (kpi === 'oe' && currentVeilleTab !== 'oe') switchVeilleTab('oe');
+            else renderVeilleCurrentTab();
         }
 
     </script>
