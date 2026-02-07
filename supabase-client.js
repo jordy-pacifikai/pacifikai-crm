@@ -130,6 +130,25 @@ class SupabaseClient {
         return false;
     }
 
+    async ensureValidToken() {
+        if (!this.session) return false;
+        try {
+            const payload = JSON.parse(atob(this.session.access_token.split('.')[1]));
+            const expiresAt = payload.exp * 1000;
+            const fiveMinutes = 5 * 60 * 1000;
+
+            if (Date.now() > expiresAt - fiveMinutes) {
+                console.log('[Auth] Token expiring soon, refreshing...');
+                const refreshed = await this.refreshSession(this.session.refresh_token);
+                if (!refreshed) throw new Error('Session expiree');
+            }
+        } catch (e) {
+            if (e.message === 'Session expiree') throw e;
+            console.warn('[Auth] Token check failed:', e);
+        }
+        return true;
+    }
+
     async loadTeamMember() {
         if (!this.user) return;
         const members = await this.select('team_members', { id: `eq.${this.user.id}` });
@@ -230,8 +249,8 @@ class SupabaseClient {
         }
 
         const deleted = await response.json();
-        if (Array.isArray(deleted) && deleted.length === 0) {
-            throw new Error('Aucun enregistrement supprime (verifier les permissions)');
+        if (!deleted || deleted.length === 0) {
+            throw new Error('Suppression echouee - session expiree ou element introuvable');
         }
 
         return true;
@@ -594,9 +613,18 @@ class SupabaseClient {
     }
 
     async deleteBlogArticle(id) {
-        const article = await this.getBlogArticle(id);
+        await this.ensureValidToken();
+
+        let articleTitle = null;
+        try {
+            const article = await this.getBlogArticle(id);
+            articleTitle = article?.title;
+        } catch (e) {
+            console.warn('[Blog] Could not fetch article for logging:', e);
+        }
+
         await this.delete('blog_articles', id);
-        await this.logActivity('delete', 'blog', id, article?.title);
+        await this.logActivity('delete', 'blog', id, articleTitle);
     }
 
     // === BLOG SEARCHES ===
@@ -657,6 +685,26 @@ class SupabaseClient {
         const campaign = await this.getNewsletterCampaign(id);
         await this.delete('newsletter_campaigns', id);
         await this.logActivity('delete', 'newsletter', id, campaign?.subject);
+    }
+
+    // === VEILLE POLYNESIE ===
+
+    async getAppelsOffres(filters = {}) {
+        return await this.select('veille_appels_offres', filters, { order: 'created_at.desc' });
+    }
+
+    async getOffresEmploi(filters = {}) {
+        return await this.select('veille_offres_emploi', filters, { order: 'created_at.desc' });
+    }
+
+    async getAppelOffre(id) {
+        const results = await this.select('veille_appels_offres', { id: `eq.${id}` });
+        return results[0];
+    }
+
+    async getOffreEmploi(id) {
+        const results = await this.select('veille_offres_emploi', { id: `eq.${id}` });
+        return results[0];
     }
 
     // === CLIENT INFRASTRUCTURES ===

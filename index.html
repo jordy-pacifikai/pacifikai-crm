@@ -4765,6 +4765,36 @@
         .blog-article-status.draft { background: var(--bg-muted); color: var(--text-muted); }
         .blog-article-status.ready { background: var(--yellow); color: var(--text); }
 
+        /* Veille Polynesie badges */
+        .veille-badge-new {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--orange, #f59e0b);
+        }
+        .veille-badge-expiring {
+            background: rgba(196, 90, 90, 0.15);
+            color: var(--red);
+        }
+        .veille-relevance-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--bg-muted);
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .veille-relevance-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
         .blog-article-content {
             padding: 1rem;
         }
@@ -6789,6 +6819,11 @@
                         Newsletter
                         <span class="nav-badge" id="nav-newsletter-count" style="background: var(--cyan);">0</span>
                     </a>
+                    <a class="nav-item" data-view="veille">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Veille
+                        <span class="nav-badge" id="nav-veille-count" style="background: var(--orange, #f59e0b);">0</span>
+                    </a>
                 </div>
 
                 <!-- Tools -->
@@ -8309,6 +8344,104 @@
                                 Envoyer
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Veille Polynesie View -->
+            <div class="view" id="view-veille">
+                <header class="header">
+                    <div class="header-left">
+                        <h1>Veille Polynesie</h1>
+                        <p>Appels d'offres et offres d'emploi — <span id="veille-last-sync"></span></p>
+                    </div>
+                    <div class="header-actions">
+                        <input type="text" class="filter-select" id="veille-search"
+                               placeholder="Rechercher..."
+                               oninput="filterVeilleEntries()"
+                               style="min-width: 200px; background-image: none; padding-right: 0.875rem;" />
+                        <select class="filter-select" id="veille-source-filter" onchange="filterVeilleEntries()">
+                            <option value="all">Toutes sources</option>
+                        </select>
+                        <select class="filter-select" id="veille-category-filter" onchange="filterVeilleEntries()">
+                            <option value="all">Toutes categories</option>
+                        </select>
+                        <button class="btn btn-ghost" onclick="loadVeilleData()" title="Rafraichir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            Sync
+                        </button>
+                    </div>
+                </header>
+
+                <div class="content" style="padding: 1.5rem 2rem;">
+                    <!-- KPI Cards -->
+                    <div class="stats-row" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="stat">
+                            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Appels d'Offres</div>
+                            <div class="stat-value" style="color: var(--blue, #3b82f6);" id="kpi-veille-ao-total">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Offres d'Emploi</div>
+                            <div class="stat-value" style="color: var(--green);" id="kpi-veille-oe-total">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Nouveaux</div>
+                            <div class="stat-value" style="color: var(--orange, #f59e0b);" id="kpi-veille-new">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Expirent bientot</div>
+                            <div class="stat-value" style="color: var(--red);" id="kpi-veille-expiring">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Score moyen</div>
+                            <div class="stat-value" style="color: var(--purple, #8b5cf6);" id="kpi-veille-avg-score">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-tabs -->
+                    <div class="blog-tabs">
+                        <button class="blog-tab active" id="veille-tab-ao" onclick="switchVeilleTab('ao')">
+                            Appels d'Offres <span class="blog-tab-count" id="veille-tab-ao-count">0</span>
+                        </button>
+                        <button class="blog-tab" id="veille-tab-oe" onclick="switchVeilleTab('oe')">
+                            Offres d'Emploi <span class="blog-tab-count" id="veille-tab-oe-count">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Appels d'Offres Grid -->
+                    <div id="veille-content-ao">
+                        <div class="blog-articles-grid" id="veille-ao-grid">
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-dim);">
+                                Clique sur Sync ou attend le chargement automatique...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offres d'Emploi Grid -->
+                    <div id="veille-content-oe" style="display: none;">
+                        <div class="blog-articles-grid" id="veille-oe-grid">
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-dim);">
+                                Clique sur Sync ou attend le chargement automatique...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Veille Detail Modal -->
+            <div class="modal-overlay" id="veille-detail-modal" style="display: none;" onclick="closeVeilleModal(event)">
+                <div class="edit-content-modal" onclick="event.stopPropagation()" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span id="veille-modal-title">Detail</span>
+                    </h3>
+                    <div id="veille-modal-body"></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                        <button class="btn btn-ghost" onclick="closeVeilleModal()">Fermer</button>
+                        <a class="btn btn-primary" id="veille-modal-link" href="#" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            Voir la source
+                        </a>
                     </div>
                 </div>
             </div>
@@ -10149,6 +10282,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
             // 3b. Charger les articles blog en arriere-plan (pour le calendrier)
             loadBlogArticles().catch(err => console.warn('[Blog] Init load failed:', err));
+
+            // 3c. Pre-charger les conversations Messenger en arriere-plan (pour le badge sidebar)
+            loadMessengerConversations().catch(err => console.warn('[Messenger] Init load failed:', err));
 
             // 4. Clés API Claude (optionnel - MANA peut fonctionner via n8n)
             // Modal de config supprimé - configuration via console si nécessaire
@@ -18922,6 +19058,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
             if (name === 'newsletter') {
                 loadNewsletterCampaigns();
             }
+            if (name === 'veille' && veilleAppelsOffres.length === 0) {
+                loadVeilleData();
+            }
             // Update MANA suggestions based on active view
             if (typeof updateChatSuggestions === 'function') {
                 updateChatSuggestions();
@@ -19933,7 +20072,11 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
             } catch (error) {
                 console.error('[Blog] Delete error:', error);
-                showToast('Erreur: ' + (error.message || 'Suppression echouee'), 'error');
+                let msg = error.message || 'Suppression echouee';
+                if (msg.includes('session expiree') || msg.includes('Session expiree') || msg.includes('401')) {
+                    msg = 'Session expiree - recharge la page';
+                }
+                showToast('Erreur: ' + msg, 'error');
                 btn.disabled = false;
                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Supprimer';
             }
@@ -21455,6 +21598,324 @@ Reponds UNIQUEMENT avec le texte du post.`;
             }
         `;
         document.head.appendChild(style);
+
+        // ============================================
+        // VEILLE POLYNESIE (Market Intelligence)
+        // ============================================
+
+        let veilleAppelsOffres = [];
+        let veilleOffresEmploi = [];
+        let currentVeilleTab = 'ao';
+
+        async function loadVeilleData() {
+            try {
+                showToast('Chargement de la veille...');
+
+                const [ao, oe] = await Promise.all([
+                    supabase.getAppelsOffres({ status: 'eq.active' }),
+                    supabase.getOffresEmploi({ status: 'eq.active' })
+                ]);
+
+                veilleAppelsOffres = (ao || []).map(r => ({
+                    id: r.id,
+                    title: r.title || '',
+                    description: r.description || '',
+                    organization: r.organization || '',
+                    reference: r.reference || '',
+                    category: r.category || '',
+                    type: r.type || '',
+                    publicationDate: r.publication_date,
+                    deadline: r.deadline,
+                    estimatedAmount: r.estimated_amount,
+                    source: r.source || '',
+                    sourceUrl: r.source_url || '',
+                    tags: r.tags || [],
+                    relevanceScore: r.relevance_score || 0,
+                    aiSummary: r.ai_summary || '',
+                    status: r.status || 'active',
+                    isNew: r.is_new || false,
+                    scrapedAt: r.scraped_at
+                }));
+
+                veilleOffresEmploi = (oe || []).map(r => ({
+                    id: r.id,
+                    title: r.title || '',
+                    description: r.description || '',
+                    company: r.company || '',
+                    category: r.category || '',
+                    contractType: r.contract_type || '',
+                    experienceLevel: r.experience_level || '',
+                    location: r.location || 'Tahiti',
+                    salaryText: r.salary_text || '',
+                    publicationDate: r.publication_date,
+                    deadline: r.deadline,
+                    source: r.source || '',
+                    sourceUrl: r.source_url || '',
+                    tags: r.tags || [],
+                    skills: r.skills || [],
+                    relevanceScore: r.relevance_score || 0,
+                    aiSummary: r.ai_summary || '',
+                    status: r.status || 'active',
+                    isNew: r.is_new || false,
+                    scrapedAt: r.scraped_at
+                }));
+
+                console.log(`[Veille] Loaded ${veilleAppelsOffres.length} AO + ${veilleOffresEmploi.length} OE`);
+
+                populateVeilleFilters();
+                renderVeilleCurrentTab();
+                updateVeilleStats();
+
+                const total = veilleAppelsOffres.length + veilleOffresEmploi.length;
+                const syncEl = document.getElementById('veille-last-sync');
+                if (syncEl) syncEl.textContent = total + ' entrees actives';
+                if (total > 0) showToast(total + ' entrees chargees');
+                else showToast('Aucune entree (lance le workflow n8n pour scraper)');
+
+            } catch (error) {
+                console.error('[Veille] Error loading:', error);
+                showToast('Erreur chargement veille');
+            }
+        }
+
+        function populateVeilleFilters() {
+            const sourceSelect = document.getElementById('veille-source-filter');
+            if (sourceSelect) {
+                const allSources = new Set();
+                veilleAppelsOffres.forEach(a => allSources.add(a.source));
+                veilleOffresEmploi.forEach(o => allSources.add(o.source));
+                const labels = { lexpol: 'LEXPOL', france_marches: 'France Marches', france_travail: 'France Travail', fenuajob: 'FenuaJob', dgrh: 'DGRH', tahiti_annonces: 'Tahiti Annonces' };
+                sourceSelect.innerHTML = '<option value="all">Toutes sources</option>' +
+                    [...allSources].map(s => '<option value="' + s + '">' + (labels[s] || s) + '</option>').join('');
+            }
+            updateVeilleCategoryFilter();
+        }
+
+        function updateVeilleCategoryFilter() {
+            const sel = document.getElementById('veille-category-filter');
+            if (!sel) return;
+            const cats = new Set();
+            const data = currentVeilleTab === 'ao' ? veilleAppelsOffres : veilleOffresEmploi;
+            data.forEach(i => { if (i.category) cats.add(i.category); });
+            sel.innerHTML = '<option value="all">Toutes categories</option>' +
+                [...cats].sort().map(c => '<option value="' + c + '">' + c + '</option>').join('');
+        }
+
+        function filterVeilleEntries() {
+            renderVeilleCurrentTab();
+        }
+
+        function getFilteredVeilleData(dataset) {
+            const srcFilter = document.getElementById('veille-source-filter')?.value || 'all';
+            const catFilter = document.getElementById('veille-category-filter')?.value || 'all';
+            const search = (document.getElementById('veille-search')?.value || '').toLowerCase();
+            let items = [...dataset];
+            if (srcFilter !== 'all') items = items.filter(i => i.source === srcFilter);
+            if (catFilter !== 'all') items = items.filter(i => i.category === catFilter);
+            if (search) {
+                items = items.filter(i =>
+                    i.title.toLowerCase().includes(search) ||
+                    (i.description || '').toLowerCase().includes(search) ||
+                    (i.organization || '').toLowerCase().includes(search) ||
+                    (i.company || '').toLowerCase().includes(search) ||
+                    (i.tags || []).some(t => t.toLowerCase().includes(search))
+                );
+            }
+            return items;
+        }
+
+        function switchVeilleTab(tab) {
+            currentVeilleTab = tab;
+            document.getElementById('veille-tab-ao')?.classList.toggle('active', tab === 'ao');
+            document.getElementById('veille-tab-oe')?.classList.toggle('active', tab === 'oe');
+            document.getElementById('veille-content-ao').style.display = tab === 'ao' ? 'block' : 'none';
+            document.getElementById('veille-content-oe').style.display = tab === 'oe' ? 'block' : 'none';
+            updateVeilleCategoryFilter();
+            renderVeilleCurrentTab();
+        }
+
+        function renderVeilleCurrentTab() {
+            if (currentVeilleTab === 'ao') renderVeilleAO();
+            else renderVeilleOE();
+        }
+
+        function renderVeilleAO() {
+            const container = document.getElementById('veille-ao-grid');
+            if (!container) return;
+            const items = getFilteredVeilleData(veilleAppelsOffres);
+
+            if (items.length === 0) {
+                container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-dim);padding:3rem;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:1rem;opacity:0.5;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+                    '<p>Aucun appel d\'offres</p></div>';
+                return;
+            }
+
+            container.innerHTML = items.map(ao => {
+                const daysLeft = ao.deadline ? Math.ceil((new Date(ao.deadline) - new Date()) / 86400000) : null;
+                const isExpiring = daysLeft !== null && daysLeft <= 7 && daysLeft >= 0;
+                const isExpired = daysLeft !== null && daysLeft < 0;
+                const srcLabels = { lexpol: 'LEXPOL', france_marches: 'FM' };
+                const relColor = ao.relevanceScore >= 70 ? 'var(--green)' : ao.relevanceScore >= 40 ? 'var(--orange, #f59e0b)' : 'var(--text-muted)';
+
+                return '<div class="blog-article-card" onclick="openVeilleDetail(\'ao\',\'' + ao.id + '\')" style="cursor:pointer;">' +
+                    '<div class="blog-article-content" style="padding:1rem;">' +
+                    '<div class="blog-article-meta">' +
+                    '<span class="blog-article-status ' + (isExpired ? 'draft' : 'published') + '">' + (srcLabels[ao.source] || ao.source) + '</span>' +
+                    (ao.isNew ? ' <span class="veille-badge-new">NOUVEAU</span>' : '') +
+                    (isExpiring ? ' <span class="veille-badge-new veille-badge-expiring">J-' + daysLeft + '</span>' : '') +
+                    (ao.category ? ' <span style="font-size:0.6875rem;color:var(--text-muted);">' + ao.category + '</span>' : '') +
+                    '</div>' +
+                    '<h3 class="blog-article-title" style="margin:0.5rem 0;">' + ao.title + '</h3>' +
+                    (ao.organization ? '<p style="font-size:0.75rem;color:var(--cyan, #06b6d4);margin-bottom:0.25rem;font-weight:500;">' + ao.organization + '</p>' : '') +
+                    '<p class="blog-article-excerpt">' + ((ao.description || ao.aiSummary || 'Pas de description').substring(0, 150)) + ((ao.description || '').length > 150 ? '...' : '') + '</p>' +
+                    (ao.estimatedAmount ? '<p style="font-size:0.8125rem;font-weight:600;color:var(--gold);margin-top:0.375rem;">' + new Intl.NumberFormat('fr-FR').format(ao.estimatedAmount) + ' XPF</p>' : '') +
+                    '<div class="blog-article-footer" style="margin-top:0.75rem;">' +
+                    '<span>' + (ao.deadline ? 'Limite: ' + new Date(ao.deadline).toLocaleDateString('fr-FR') : 'Pas de deadline') + '</span>' +
+                    '<span style="font-size:0.6875rem;color:' + relColor + ';font-weight:600;">' + ao.relevanceScore + '%</span>' +
+                    '</div>' +
+                    '<div class="veille-relevance-bar"><div class="veille-relevance-fill" style="width:' + ao.relevanceScore + '%;background:' + relColor + ';"></div></div>' +
+                    '</div></div>';
+            }).join('');
+        }
+
+        function renderVeilleOE() {
+            const container = document.getElementById('veille-oe-grid');
+            if (!container) return;
+            const items = getFilteredVeilleData(veilleOffresEmploi);
+
+            if (items.length === 0) {
+                container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-dim);padding:3rem;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:1rem;opacity:0.5;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' +
+                    '<p>Aucune offre d\'emploi</p></div>';
+                return;
+            }
+
+            const contractColors = { CDI: 'var(--green)', CDD: 'var(--blue, #3b82f6)', Stage: 'var(--purple, #8b5cf6)', Alternance: 'var(--cyan, #06b6d4)' };
+            const srcLabels = { france_travail: 'FT', fenuajob: 'FenuaJob', dgrh: 'DGRH', tahiti_annonces: 'T-A' };
+
+            container.innerHTML = items.map(oe => {
+                const relColor = oe.relevanceScore >= 70 ? 'var(--green)' : oe.relevanceScore >= 40 ? 'var(--orange, #f59e0b)' : 'var(--text-muted)';
+
+                return '<div class="blog-article-card" onclick="openVeilleDetail(\'oe\',\'' + oe.id + '\')" style="cursor:pointer;">' +
+                    '<div class="blog-article-content" style="padding:1rem;">' +
+                    '<div class="blog-article-meta">' +
+                    '<span class="blog-article-status published">' + (srcLabels[oe.source] || oe.source) + '</span>' +
+                    (oe.isNew ? ' <span class="veille-badge-new">NOUVEAU</span>' : '') +
+                    (oe.contractType ? ' <span style="font-size:0.6875rem;font-weight:600;color:' + (contractColors[oe.contractType] || 'var(--text-muted)') + ';">' + oe.contractType + '</span>' : '') +
+                    '</div>' +
+                    '<h3 class="blog-article-title" style="margin:0.5rem 0;">' + oe.title + '</h3>' +
+                    (oe.company ? '<p style="font-size:0.75rem;color:var(--cyan, #06b6d4);margin-bottom:0.25rem;font-weight:500;">' + oe.company + '</p>' : '') +
+                    '<p class="blog-article-excerpt">' + ((oe.description || oe.aiSummary || 'Pas de description').substring(0, 150)) + ((oe.description || '').length > 150 ? '...' : '') + '</p>' +
+                    (oe.salaryText ? '<p style="font-size:0.8125rem;font-weight:600;color:var(--gold);margin-top:0.375rem;">' + oe.salaryText + '</p>' : '') +
+                    (oe.skills && oe.skills.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:0.5rem;">' +
+                        oe.skills.slice(0, 3).map(s => '<span style="font-size:0.625rem;padding:2px 6px;background:var(--bg-muted);border-radius:4px;color:var(--text-muted);">' + s + '</span>').join('') +
+                        (oe.skills.length > 3 ? '<span style="font-size:0.625rem;color:var(--text-dim);">+' + (oe.skills.length - 3) + '</span>' : '') +
+                    '</div>' : '') +
+                    '<div class="blog-article-footer" style="margin-top:0.75rem;">' +
+                    '<span>' + (oe.location || 'Tahiti') + '</span>' +
+                    '<span style="font-size:0.6875rem;color:' + relColor + ';font-weight:600;">' + oe.relevanceScore + '%</span>' +
+                    '</div>' +
+                    '<div class="veille-relevance-bar"><div class="veille-relevance-fill" style="width:' + oe.relevanceScore + '%;background:' + relColor + ';"></div></div>' +
+                    '</div></div>';
+            }).join('');
+        }
+
+        function updateVeilleStats() {
+            const aoTotal = veilleAppelsOffres.length;
+            const oeTotal = veilleOffresEmploi.length;
+            const newToday = veilleAppelsOffres.filter(a => a.isNew).length + veilleOffresEmploi.filter(o => o.isNew).length;
+            const now = new Date();
+            const sevenDays = 7 * 86400000;
+            const expiring = veilleAppelsOffres.filter(a => {
+                if (!a.deadline) return false;
+                const diff = new Date(a.deadline) - now;
+                return diff >= 0 && diff <= sevenDays;
+            }).length;
+            const allScores = [...veilleAppelsOffres, ...veilleOffresEmploi].map(i => i.relevanceScore).filter(s => s > 0);
+            const avgScore = allScores.length > 0 ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0;
+
+            const el = id => document.getElementById(id);
+            if (el('kpi-veille-ao-total')) el('kpi-veille-ao-total').textContent = aoTotal;
+            if (el('kpi-veille-oe-total')) el('kpi-veille-oe-total').textContent = oeTotal;
+            if (el('kpi-veille-new')) el('kpi-veille-new').textContent = newToday;
+            if (el('kpi-veille-expiring')) el('kpi-veille-expiring').textContent = expiring;
+            if (el('kpi-veille-avg-score')) el('kpi-veille-avg-score').textContent = avgScore || '--';
+            if (el('veille-tab-ao-count')) el('veille-tab-ao-count').textContent = aoTotal;
+            if (el('veille-tab-oe-count')) el('veille-tab-oe-count').textContent = oeTotal;
+
+            const navCount = el('nav-veille-count');
+            if (navCount) {
+                navCount.textContent = newToday > 0 ? newToday : (aoTotal + oeTotal);
+                navCount.style.background = newToday > 0 ? 'var(--orange, #f59e0b)' : 'var(--accent-secondary, #1a3a3a)';
+            }
+        }
+
+        function veilleDetailField(label, value) {
+            if (!value || value === '-') return '';
+            return '<div><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:2px;">' + label + '</div>' +
+                '<div style="font-size:0.8125rem;font-weight:500;">' + value + '</div></div>';
+        }
+
+        function openVeilleDetail(type, id) {
+            const item = type === 'ao' ?
+                veilleAppelsOffres.find(a => a.id === id) :
+                veilleOffresEmploi.find(o => o.id === id);
+            if (!item) return;
+
+            document.getElementById('veille-modal-title').textContent = type === 'ao' ? 'Appel d\'Offres' : 'Offre d\'Emploi';
+            const link = document.getElementById('veille-modal-link');
+            link.href = item.sourceUrl || '#';
+            link.style.display = item.sourceUrl ? 'flex' : 'none';
+
+            const body = document.getElementById('veille-modal-body');
+            const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-FR') : '-';
+
+            if (type === 'ao') {
+                body.innerHTML =
+                    '<div style="margin-bottom:1rem;"><h2 style="font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;">' + item.title + '</h2>' +
+                    (item.organization ? '<p style="color:var(--cyan, #06b6d4);font-weight:500;">' + item.organization + '</p>' : '') + '</div>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">' +
+                    veilleDetailField('Reference', item.reference) +
+                    veilleDetailField('Categorie', item.category) +
+                    veilleDetailField('Type', item.type) +
+                    veilleDetailField('Source', (item.source || '').toUpperCase()) +
+                    veilleDetailField('Publication', fmtDate(item.publicationDate)) +
+                    veilleDetailField('Date limite', fmtDate(item.deadline)) +
+                    (item.estimatedAmount ? veilleDetailField('Montant estime', new Intl.NumberFormat('fr-FR').format(item.estimatedAmount) + ' XPF') : '') +
+                    veilleDetailField('Score pertinence', item.relevanceScore + '%') +
+                    '</div>' +
+                    (item.description ? '<div style="margin-bottom:1rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Description</div><p style="font-size:0.8125rem;color:var(--text);line-height:1.6;white-space:pre-wrap;">' + item.description + '</p></div>' : '') +
+                    (item.tags && item.tags.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:0.75rem;">' + item.tags.map(t => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(26,58,58,0.3);color:var(--cyan, #06b6d4);border-radius:4px;">' + t + '</span>').join('') + '</div>' : '') +
+                    '<p style="font-size:0.6875rem;color:var(--text-dim);margin-top:1rem;">Scrape le ' + (item.scrapedAt ? new Date(item.scrapedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-') + '</p>';
+            } else {
+                body.innerHTML =
+                    '<div style="margin-bottom:1rem;"><h2 style="font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;">' + item.title + '</h2>' +
+                    (item.company ? '<p style="color:var(--cyan, #06b6d4);font-weight:500;">' + item.company + '</p>' : '') + '</div>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">' +
+                    veilleDetailField('Contrat', item.contractType) +
+                    veilleDetailField('Experience', item.experienceLevel) +
+                    veilleDetailField('Lieu', item.location) +
+                    veilleDetailField('Source', (item.source || '').toUpperCase()) +
+                    veilleDetailField('Categorie', item.category) +
+                    (item.salaryText ? veilleDetailField('Salaire', item.salaryText) : '') +
+                    veilleDetailField('Publication', fmtDate(item.publicationDate)) +
+                    veilleDetailField('Score pertinence', item.relevanceScore + '%') +
+                    '</div>' +
+                    (item.description ? '<div style="margin-bottom:1rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Description</div><p style="font-size:0.8125rem;color:var(--text);line-height:1.6;white-space:pre-wrap;">' + item.description + '</p></div>' : '') +
+                    (item.skills && item.skills.length > 0 ? '<div style="margin-bottom:0.75rem;"><div style="font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:4px;">Competences</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' + item.skills.map(s => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(59,130,246,0.15);color:var(--blue, #3b82f6);border-radius:4px;">' + s + '</span>').join('') + '</div></div>' : '') +
+                    (item.tags && item.tags.length > 0 ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem;">' + item.tags.map(t => '<span style="font-size:0.6875rem;padding:3px 8px;background:rgba(26,58,58,0.3);color:var(--cyan, #06b6d4);border-radius:4px;">' + t + '</span>').join('') + '</div>' : '') +
+                    '<p style="font-size:0.6875rem;color:var(--text-dim);margin-top:1rem;">Scrape le ' + (item.scrapedAt ? new Date(item.scrapedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-') + '</p>';
+            }
+
+            document.getElementById('veille-detail-modal').style.display = 'flex';
+        }
+
+        function closeVeilleModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('veille-detail-modal').style.display = 'none';
+        }
+
     </script>
 </body>
 </html>
