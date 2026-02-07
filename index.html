@@ -6748,7 +6748,6 @@
                 <header class="header">
                     <div class="header-left">
                         <h1>Dashboard</h1>
-                        <p id="current-date"></p>
                     </div>
                     <div class="header-actions">
                         <!-- Search Shortcut -->
@@ -9671,7 +9670,6 @@
 
             // Phase 1: Setup UI immédiat (non-bloquant)
             loadData();
-            setDate();
             render();
             setupNav();
             setupFilters();
@@ -10016,7 +10014,6 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
             // 5. Charger le manifest des assets AVANT le render (important pour Featured Prospects)
             await loadAssetsManifest();
-            setDate();
             render();
             setupNav();
             setupFilters();
@@ -10418,11 +10415,6 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             renderStats();
             renderPipeline();
             showToast('Prospects reinitialises', 'success');
-        }
-
-        function setDate() {
-            const d = new Date();
-            document.getElementById('current-date').textContent = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         // Navigation
