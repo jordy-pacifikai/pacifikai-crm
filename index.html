@@ -6899,7 +6899,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         n8n
                     </a>
-                    <a class="nav-item" href="https://www.facebook.com/profile.php?id=61587101037690" target="_blank">
+                    <a class="nav-item" href="https://business.facebook.com/latest/inbox/all?asset_id=61587101037690" target="_blank">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                         Facebook
                     </a>
@@ -8717,7 +8717,7 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                             Sync
                         </button>
-                        <a class="btn btn-primary" href="https://www.facebook.com/profile.php?id=61587101037690" target="_blank">
+                        <a class="btn btn-primary" href="https://business.facebook.com/latest/inbox/all?asset_id=61587101037690" target="_blank">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                             Ouvrir Facebook
                         </a>
@@ -9667,7 +9667,7 @@
                 calendly: 'https://calendly.com/pacifikai'
             },
             social: {
-                facebook: 'https://www.facebook.com/profile.php?id=61587101037690',
+                facebook: 'https://business.facebook.com/latest/inbox/all?asset_id=61587101037690',
                 website: 'https://pacifikai.com'
             }
         };
@@ -19281,16 +19281,26 @@ Reponds UNIQUEMENT avec le texte du post.`;
             messengerRealtimeActive = true;
             supabase.subscribeToMessenger(
                 // onInsert - nouveau message
-                (msg) => {
+                async (msg) => {
                     console.log('[Messages] Realtime: nouveau message recu');
                     const senderId = msg.sender_id;
                     let conv = messengerConversations.find(c => c.senderId === senderId);
 
                     if (!conv) {
-                        // Nouvelle conversation
+                        // Chercher le nom dans les prospects Supabase
+                        let prospectName = 'Nouvel utilisateur';
+                        try {
+                            const prospects = await supabase.getMessengerProspects();
+                            const prospect = prospects.find(p => p.sender_id === senderId);
+                            if (prospect) {
+                                prospectName = prospect.name || `Messenger #${senderId.slice(-4)}`;
+                            }
+                        } catch (e) {
+                            console.warn('[Messages] Impossible de charger le prospect:', e);
+                        }
                         conv = {
                             senderId: senderId,
-                            userName: 'Nouvel utilisateur',
+                            userName: prospectName,
                             messages: [],
                             lastMessage: null,
                             unreadCount: 0
@@ -19640,9 +19650,8 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         function openFacebookProfile() {
             if (!currentConversationId) return;
-            // Note: Facebook PSID cannot be used to open profile directly
-            // This would need Page-scoped user ID mapping
-            window.open('https://www.facebook.com/profile.php?id=61587101037690', '_blank');
+            // Ouvrir la boite de reception Messenger Business Suite
+            window.open('https://business.facebook.com/latest/inbox/all?asset_id=61587101037690', '_blank');
         }
 
         async function sendManualReply() {
@@ -22357,7 +22366,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             }
             if (analysis.generated_at) {
                 html += '<p style="font-size:0.625rem;color:var(--text-dim);margin-top:0.5rem;text-align:right;">Genere le ' +
-                    new Date(analysis.generated_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</p>';
+                    new Date(analysis.generated_at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</p>';
             }
             html += '</div>';
             return html;
@@ -22373,12 +22382,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
             var ao = veilleAppelsOffres.find(function(a) { return a.id === aoId; });
             if (!ao) { showToast('AO non trouve'); return; }
 
-            var claudeKey = '';
-            try { claudeKey = supabase.getClaudeApiKey ? supabase.getClaudeApiKey() : ''; } catch(e) {}
-            if (!claudeKey) claudeKey = localStorage.getItem('PACIFIKAI_CLAUDE_KEY') || '';
+            var claudeKey = getClaudeApiKey();
             if (!claudeKey) {
-                showNotification('Configure ta cle API Claude dans les Settings pour utiliser l\'analyse IA', 'error');
-                var btn = document.getElementById('veille-analyze-btn');
+                showToast('Configure ta cle API Claude dans les Settings pour utiliser l\'analyse IA', 'error');
                 if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Analyser comment PACIFIK\'AI peut repondre'; }
                 return;
             }
