@@ -8631,6 +8631,7 @@
                             <option value="unread">Non lus</option>
                             <option value="escalation">Escalades (humain requis)</option>
                             <option value="manual">Reponses manuelles</option>
+                            <option value="archived">Archives</option>
                         </select>
                         <button class="btn btn-ghost" onclick="loadMessengerConversations()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -8720,6 +8721,12 @@
                                     <div class="chat-header-actions">
                                         <button class="btn btn-ghost btn-sm" onclick="markConversationRead()" title="Marquer comme lu">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </button>
+                                        <button class="btn btn-ghost btn-sm" onclick="markConversationUnread()" title="Marquer comme non lu">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                        </button>
+                                        <button class="btn btn-ghost btn-sm" onclick="archiveConversation()" title="Archiver la conversation">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
                                         </button>
                                         <button class="btn btn-ghost btn-sm" onclick="openFacebookProfile()" title="Voir profil Facebook">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -10283,8 +10290,10 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             // 3b. Charger les articles blog en arriere-plan (pour le calendrier)
             loadBlogArticles().catch(err => console.warn('[Blog] Init load failed:', err));
 
-            // 3c. Pre-charger les conversations Messenger en arriere-plan (pour le badge sidebar)
-            loadMessengerConversations().catch(err => console.warn('[Messenger] Init load failed:', err));
+            // 3c. Pre-charger les conversations Messenger + demarrer Realtime (badge sidebar live)
+            loadMessengerConversations().then(() => {
+                startMessengerRealtime();
+            }).catch(err => console.warn('[Messenger] Init load failed:', err));
 
             // 4. Clés API Claude (optionnel - MANA peut fonctionner via n8n)
             // Modal de config supprimé - configuration via console si nécessaire
@@ -10728,10 +10737,8 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             } else if (name === 'focus' && typeof renderFocusMode === 'function') {
                 renderFocusMode();
             } else if (name === 'messages' && typeof loadMessengerConversations === 'function') {
-                // Charger les conversations puis demarrer Realtime WebSocket
-                loadMessengerConversations().then(() => {
-                    startMessengerRealtime();
-                });
+                // Recharger les conversations (Realtime deja actif depuis DOMContentLoaded)
+                loadMessengerConversations();
             } else if (name === 'finance' && typeof loadFinanceData === 'function') {
                 loadFinanceData();
             }
@@ -19082,6 +19089,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         // ===== MESSAGES MODULE (Supabase) =====
         let messengerConversations = [];
+        let allMessengerConversations = [];
         let currentConversationId = null;
         let currentMessagesFilter = 'all';
 
@@ -19097,7 +19105,8 @@ Reponds UNIQUEMENT avec le texte du post.`;
                     prospectsMap.set(p.sender_id, {
                         name: p.name || p.first_name || (p.sender_id ? `Messenger #${p.sender_id.slice(-4)}` : 'Utilisateur'),
                         profilePic: p.profile_pic,
-                        requiresHuman: p.requires_human_intervention || false
+                        requiresHuman: p.requires_human_intervention || false,
+                        archived: p.archived || false
                     });
                 });
 
@@ -19115,6 +19124,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                             userName: prospectInfo.name || 'Utilisateur',
                             profilePic: prospectInfo.profilePic,
                             requiresHuman: prospectInfo.requiresHuman || false,
+                            archived: prospectInfo.archived || false,
                             messages: [],
                             lastMessage: null,
                             unreadCount: 0
@@ -19148,16 +19158,21 @@ Reponds UNIQUEMENT avec le texte du post.`;
                     }
                 });
 
-                messengerConversations = Array.from(conversationsMap.values());
+                const allConvs = Array.from(conversationsMap.values());
 
                 // Sort by last message date
-                messengerConversations.sort((a, b) => {
+                allConvs.sort((a, b) => {
                     const dateA = a.lastMessage ? new Date(a.lastMessage.createdAt) : new Date(0);
                     const dateB = b.lastMessage ? new Date(b.lastMessage.createdAt) : new Date(0);
                     return dateB - dateA;
                 });
 
-                console.log(`[Messages] Loaded ${messengerConversations.length} conversations from Supabase`);
+                // Stocker toutes les conversations (y compris archivees) pour le filtre Archives
+                allMessengerConversations = allConvs;
+                // Par defaut, exclure les archivees
+                messengerConversations = allConvs.filter(c => !c.archived);
+
+                console.log(`[Messages] Loaded ${messengerConversations.length} conversations (${allConvs.filter(c => c.archived).length} archived) from Supabase`);
 
                 renderConversationsList();
                 updateMessagesKPIs();
@@ -19257,7 +19272,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
             const container = document.getElementById('conversations-items');
             if (!container) return;
 
-            let filtered = messengerConversations;
+            // Pour le filtre "archived", utiliser allMessengerConversations
+            let filtered = currentMessagesFilter === 'archived'
+                ? allMessengerConversations.filter(c => c.archived)
+                : messengerConversations;
 
             // Apply filter
             if (currentMessagesFilter === 'unread') {
@@ -19278,12 +19296,14 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 );
             }
 
+            const isArchiveView = currentMessagesFilter === 'archived';
+
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="conversations-empty">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                        <p>Aucune conversation</p>
-                        <span>${searchTerm ? 'Aucun resultat pour cette recherche' : 'Les messages Facebook Messenger apparaitront ici'}</span>
+                        <p>${isArchiveView ? 'Aucune archive' : 'Aucune conversation'}</p>
+                        <span>${searchTerm ? 'Aucun resultat pour cette recherche' : (isArchiveView ? 'Les conversations archivees apparaitront ici' : 'Les messages Facebook Messenger apparaitront ici')}</span>
                     </div>
                 `;
                 return;
@@ -19306,7 +19326,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
                         </div>
                         <div class="conversation-meta">
                             <div class="conversation-time">${time}</div>
-                            ${isUnread ? `<div class="conversation-badge">${conv.unreadCount}</div>` : ''}
+                            ${isArchiveView
+                                ? `<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); unarchiveConversation('${conv.senderId}')" title="Restaurer" style="padding:2px 6px;font-size:11px;">Restaurer</button>`
+                                : (isUnread ? `<div class="conversation-badge">${conv.unreadCount}</div>` : '')
+                            }
                         </div>
                     </div>
                 `;
@@ -19459,6 +19482,64 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
             } catch (error) {
                 console.error('[Messages] Error marking as read:', error);
+            }
+        }
+
+        async function markConversationUnread() {
+            if (!currentConversationId) return;
+            const conv = messengerConversations.find(c => c.senderId === currentConversationId);
+            if (!conv) return;
+
+            const lastUserMsg = [...conv.messages].reverse().find(m => m.role === 'user');
+            if (!lastUserMsg) return;
+
+            try {
+                await supabase.updateMessengerMessage(lastUserMsg.id, { read: false });
+                lastUserMsg.read = false;
+                conv.unreadCount = conv.messages.filter(m => m.role === 'user' && !m.read).length;
+                renderConversationsList();
+                updateNavMessagesCount();
+                addNotification('info', 'Conversation marquee comme non lue');
+            } catch (error) {
+                console.error('[Messages] Error marking as unread:', error);
+            }
+        }
+
+        async function archiveConversation() {
+            if (!currentConversationId) return;
+            try {
+                const prospects = await supabase.getMessengerProspects();
+                const prospect = prospects.find(p => p.sender_id === currentConversationId);
+                if (prospect) {
+                    await supabase.update('messenger_prospects', prospect.id, { archived: true });
+                }
+                messengerConversations = messengerConversations.filter(c => c.senderId !== currentConversationId);
+                currentConversationId = null;
+                document.querySelector('.chat-detail-empty').style.display = 'flex';
+                document.getElementById('chat-detail-content').style.display = 'none';
+                renderConversationsList();
+                updateMessagesKPIs();
+                updateNavMessagesCount();
+                addNotification('success', 'Conversation archivee');
+            } catch (error) {
+                console.error('[Messages] Archive error:', error);
+                addNotification('error', 'Erreur archivage: ' + error.message);
+            }
+        }
+
+        async function unarchiveConversation(senderId) {
+            try {
+                const prospects = await supabase.getMessengerProspects();
+                const prospect = prospects.find(p => p.sender_id === senderId);
+                if (prospect) {
+                    await supabase.update('messenger_prospects', prospect.id, { archived: false });
+                }
+                currentMessagesFilter = 'all';
+                document.getElementById('messages-filter').value = 'all';
+                await loadMessengerConversations();
+                addNotification('success', 'Conversation restauree');
+            } catch (error) {
+                console.error('[Messages] Unarchive error:', error);
             }
         }
 
