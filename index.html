@@ -1044,6 +1044,31 @@
             color: white !important;
         }
 
+        .show-archived-btn, .show-more-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--bg-muted);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-top: 0.25rem;
+            transition: all var(--transition-fast);
+        }
+        .show-archived-btn:hover, .show-more-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+            border-color: var(--accent);
+        }
+        .show-more-btn {
+            background: transparent;
+            color: var(--accent);
+        }
+        .show-more-btn:hover {
+            background: var(--accent-glow);
+        }
+
         .task-list-row {
             border-bottom: 1px solid var(--border-subtle);
             transition: background 0.15s;
@@ -1173,6 +1198,17 @@
             font-weight: 600;
             margin-bottom: 0.25rem;
             color: var(--text);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pipeline-card-name .badge {
+            font-size: 0.5625rem;
+            padding: 0.125rem 0.375rem;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .pipeline-card-company {
@@ -10490,6 +10526,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.card-btn[data-filter]').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+                    prospectsDisplayLimit = PROSPECTS_PAGE_SIZE;
                     renderProspectsTable(btn.dataset.filter);
                 });
             });
@@ -10615,7 +10652,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                             <span class="pipeline-title">${s.label}</span>
                             <span class="pipeline-count">${items.length}</span>
                         </div>
-                        ${items.map(p => {
+                        ${items.slice(0, 8).map(p => {
                             const hasAssets = p.assets && p.assets.length > 0;
                             const scoreBadge = typeof getScoreBadge === 'function' ? getScoreBadge(p.id || p.airtableId) : '';
                             const infraIndicator = renderInfraIndicator(p.id);
@@ -10635,9 +10672,39 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                                 </div>
                             </div>
                         `;}).join('')}
+                        ${items.length > 8 ? `<button class="show-more-btn" onclick="expandPipelineColumn(this, '${s.key}')">+${items.length - 8} prospect${items.length - 8 > 1 ? 's' : ''}...</button>` : ''}
                     </div>
                 `;
             }).join('');
+        }
+
+        function expandPipelineColumn(btn, stageKey) {
+            const allItems = prospects.filter(p => p.status === stageKey);
+            const container = btn.parentElement;
+            btn.remove();
+            const existingCount = container.querySelectorAll('.pipeline-card').length;
+            const remaining = allItems.slice(existingCount);
+            const html = remaining.map(p => {
+                const hasAssets = p.assets && p.assets.length > 0;
+                const scoreBadge = typeof getScoreBadge === 'function' ? getScoreBadge(p.id || p.airtableId) : '';
+                const infraIndicator = renderInfraIndicator(p.id);
+                return `
+                <div class="pipeline-card ${hasAssets ? 'has-assets' : ''}"
+                     draggable="true"
+                     data-id="${p.id}"
+                     ondragstart="handleDragStart(event, '${p.id}')"
+                     ondragend="handleDragEnd(event)"
+                     onclick="openProspectDetail('${p.id}')"
+                     style="cursor: pointer;">
+                    <div class="pipeline-card-name">${prospectDisplayName(p)}${isAutoProspect(p) ? ' ' + sourceBadge(p.source) : ''}${renderAssetIcons(p.assets, true)}${infraIndicator} ${scoreBadge}</div>
+                    <div class="pipeline-card-company">${isAutoProspect(p) ? (p.company || p.sector) : p.sector}</div>
+                    <div class="pipeline-card-footer">
+                        <span class="pipeline-card-value">${fmtXPF(p.value)}</span>
+                        ${p.priority ? `<span class="pipeline-card-priority ${p.priority}">${priorityLabel(p.priority)}</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            container.insertAdjacentHTML('beforeend', html);
         }
 
         function renderRecentProspects() {
@@ -10658,10 +10725,15 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             `).join('');
         }
 
+        const PROSPECTS_PAGE_SIZE = 20;
+        let prospectsDisplayLimit = PROSPECTS_PAGE_SIZE;
+
         function renderProspectsTable(filter) {
             const filtered = getFilteredProspects();
+            const displayed = filtered.slice(0, prospectsDisplayLimit);
+            const remaining = filtered.length - prospectsDisplayLimit;
             const tbody = document.getElementById('prospects-table');
-            tbody.innerHTML = filtered.map(p => {
+            tbody.innerHTML = displayed.map(p => {
                 const scoreBadge = typeof getScoreBadge === 'function' ? getScoreBadge(p.id || p.airtableId) : '-';
                 const infraIndicator = renderInfraIndicator(p.id);
                 return `
@@ -10684,7 +10756,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     <td>${p.priority ? `<span class="badge ${p.priority}">${priorityLabel(p.priority)}</span>` : '-'}</td>
                     <td>${renderAssigneeBadge(p.assignedTo, 22) || '<span style="color:var(--text-dim)">-</span>'}</td>
                 </tr>
-            `;}).join('');
+            `;}).join('') + (remaining > 0 ? `<tr><td colspan="9" style="text-align:center;padding:0.75rem;">
+                <button class="show-more-btn" onclick="prospectsDisplayLimit += ${PROSPECTS_PAGE_SIZE}; renderProspectsTable();">Charger ${Math.min(PROSPECTS_PAGE_SIZE, remaining)} prospects de plus... (${remaining} restants)</button>
+            </td></tr>` : '');
         }
 
         // Tasks Data (loaded from Supabase via loadDataFromSupabase)
@@ -10818,8 +10892,12 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
                 Object.entries(columns).forEach(([status, cfg]) => {
                     const items = filtered.filter(t => t.status === status);
+                    const displayItems = status === 'Terminé' ? items.slice(0, 5) : items;
+                    const hiddenCount = items.length - displayItems.length;
                     document.getElementById(cfg.count).textContent = items.length;
-                    document.getElementById(cfg.el).innerHTML = items.map(t => renderTaskCard(t)).join('');
+                    document.getElementById(cfg.el).innerHTML =
+                        displayItems.map(t => renderTaskCard(t)).join('') +
+                        (hiddenCount > 0 ? `<button class="show-archived-btn" onclick="toggleArchivedTasks(this, '${cfg.el}')">Voir ${hiddenCount} tache${hiddenCount > 1 ? 's' : ''} terminee${hiddenCount > 1 ? 's' : ''} de plus...</button>` : '');
                 });
 
                 setupTaskDragAndDrop();
@@ -10829,6 +10907,13 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             if (currentTaskView === 'list') {
                 renderTaskListView(filtered);
             }
+        }
+
+        function toggleArchivedTasks(btn, elId) {
+            const container = document.getElementById(elId);
+            const allDone = getFilteredTasks().filter(t => t.status === 'Terminé');
+            container.innerHTML = allDone.map(t => renderTaskCard(t)).join('') +
+                `<button class="show-archived-btn" onclick="renderTasks()">Reduire</button>`;
         }
 
         function renderTaskCard(t) {
@@ -12010,7 +12095,10 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return;
             }
 
-            board.innerHTML = filtered.map(p => {
+            const displayed = filtered.slice(0, prospectsDisplayLimit);
+            const remaining = filtered.length - prospectsDisplayLimit;
+
+            board.innerHTML = displayed.map(p => {
                 const assets = getProspectAssets(p.company);
                 const hasAssets = assets && assets.files && assets.files.length > 0;
                 const initials = (p.company || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
@@ -12039,7 +12127,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                         <span class="grid-card-status">${statusLabel(p.status)}</span>
                     </div>
                 </div>`;
-            }).join('');
+            }).join('') + (remaining > 0 ? `<div style="grid-column:1/-1;text-align:center;padding:0.75rem;">
+                <button class="show-more-btn" onclick="prospectsDisplayLimit += ${PROSPECTS_PAGE_SIZE}; renderProspectsViews();">+${remaining} prospects...</button>
+            </div>` : '');
         }
 
         // ============================================
@@ -12069,7 +12159,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             }
 
             const avatarColors = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
-            list.innerHTML = header + filtered.map((p, i) => {
+            const displayed = filtered.slice(0, prospectsDisplayLimit);
+            const remaining = filtered.length - prospectsDisplayLimit;
+            list.innerHTML = header + displayed.map((p, i) => {
                 const initials = (p.company || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
                 const color = avatarColors[i % avatarColors.length];
                 const assets = getProspectAssets(p.company);
@@ -12087,7 +12179,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     <div class="compact-assets-icon">${hasAssets ? `${assets.files.length}` : '-'}</div>
                     <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                 </div>`;
-            }).join('');
+            }).join('') + (remaining > 0 ? `<div style="text-align:center;padding:0.75rem;">
+                <button class="show-more-btn" onclick="prospectsDisplayLimit += ${PROSPECTS_PAGE_SIZE}; renderProspectsViews();">+${remaining} prospects...</button>
+            </div>` : '');
         }
 
         // ============================================
@@ -12122,7 +12216,8 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                             </div>
                         </div>
                         <div class="kanban-cards">
-                            ${items.map(p => renderKanbanCard(p)).join('')}
+                            ${items.slice(0, 8).map(p => renderKanbanCard(p)).join('')}
+                            ${items.length > 8 ? `<button class="show-more-btn" onclick="expandKanbanColumn(this, '${t.key}')">+${items.length - 8} prospects...</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -12152,6 +12247,16 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     </div>
                 </div>
             `;
+        }
+
+        function expandKanbanColumn(btn, tempKey) {
+            const filtered = getFilteredProspects();
+            const allItems = filtered.filter(p => p.priority === tempKey);
+            const container = btn.parentElement;
+            btn.remove();
+            const existingCount = container.querySelectorAll('.kanban-card').length;
+            const remaining = allItems.slice(existingCount);
+            container.insertAdjacentHTML('beforeend', remaining.map(p => renderKanbanCard(p)).join(''));
         }
 
         // Drag & Drop handlers
@@ -19642,16 +19747,18 @@ Reponds UNIQUEMENT avec le texte du post.`;
             if (!confirm('Supprimer cet article ?')) return;
 
             try {
+                console.log('[Blog] Deleting article:', articleId);
                 await supabase.deleteBlogArticle(articleId);
+                console.log('[Blog] Delete success');
 
-                blogArticles = blogArticles.filter(a => a.id !== articleId);
+                blogArticles = blogArticles.filter(a => String(a.id) !== String(articleId));
                 renderBlogArticles();
                 updateBlogStats();
                 showToast('Article supprime');
 
             } catch (error) {
                 console.error('[Blog] Delete error:', error);
-                showToast('Erreur suppression');
+                showToast('Erreur: ' + (error.message || 'Suppression echouee'));
             }
         }
 
