@@ -229,6 +229,11 @@ class SupabaseClient {
             throw new Error(`Erreur delete: ${error}`);
         }
 
+        const deleted = await response.json();
+        if (Array.isArray(deleted) && deleted.length === 0) {
+            throw new Error('Aucun enregistrement supprime (verifier les permissions)');
+        }
+
         return true;
     }
 

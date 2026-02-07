@@ -19796,9 +19796,37 @@ Reponds UNIQUEMENT avec le texte du post.`;
             window.open(`https://pacifikai.com/blog/articles/${article.slug}.html`, '_blank');
         }
 
-        async function deleteBlogArticle(articleId) {
-            if (!confirm('Supprimer cet article ?')) return;
+        function deleteBlogArticle(articleId) {
+            const article = blogArticles.find(a => String(a.id) === String(articleId));
+            const title = article?.title || 'cet article';
 
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay show';
+            modal.style.zIndex = '999999';
+            modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+            modal.innerHTML = `
+                <div class="modal" style="max-width:440px;" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <div>
+                            <h3 style="margin:0;font-size:1rem;">Supprimer l'article</h3>
+                        </div>
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                    </div>
+                    <div style="padding:1.25rem 1.5rem;">
+                        <p style="margin:0 0 0.5rem;color:var(--text);">Tu es sur de vouloir supprimer :</p>
+                        <p style="margin:0;font-weight:600;color:var(--text);">"${title}"</p>
+                        <p style="margin:0.75rem 0 0;font-size:0.8rem;color:var(--text-dim);">Cette action est irreversible.</p>
+                    </div>
+                    <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.5rem;">
+                        <button class="btn" onclick="this.closest('.modal-overlay').remove()">Annuler</button>
+                        <button class="btn btn-danger" onclick="confirmDeleteBlogArticle('${articleId}'); this.closest('.modal-overlay').remove();">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        async function confirmDeleteBlogArticle(articleId) {
             try {
                 console.log('[Blog] Deleting article:', articleId);
                 await supabase.deleteBlogArticle(articleId);
@@ -19808,7 +19836,6 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 renderBlogArticles();
                 updateBlogStats();
                 showToast('Article supprime');
-
             } catch (error) {
                 console.error('[Blog] Delete error:', error);
                 showToast('Erreur: ' + (error.message || 'Suppression echouee'));
