@@ -707,6 +707,10 @@ class SupabaseClient {
         return results[0];
     }
 
+    async updateAppelOffreAnalysis(id, analysis) {
+        return await this.update('veille_appels_offres', id, { ai_pacifikai_analysis: analysis });
+    }
+
     // === CLIENT INFRASTRUCTURES ===
 
     async getClientInfrastructures() {
