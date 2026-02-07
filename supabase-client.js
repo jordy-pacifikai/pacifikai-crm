@@ -594,6 +594,36 @@ class SupabaseClient {
         await this.logActivity('delete', 'blog', id, article?.title);
     }
 
+    // === BLOG SEARCHES ===
+
+    async getBlogSearches() {
+        return await this.select('blog_searches', {}, { order: 'created_at.desc' });
+    }
+
+    async createBlogSearch(data) {
+        const result = await this.insert('blog_searches', data);
+        return result[0];
+    }
+
+    // === BLOG SUGGESTIONS ===
+
+    async getBlogSuggestions(filters = {}) {
+        return await this.select('blog_suggestions', filters, { order: 'relevance_score.desc' });
+    }
+
+    async createBlogSuggestions(suggestions) {
+        return await this.insert('blog_suggestions', suggestions);
+    }
+
+    async updateBlogSuggestion(id, data) {
+        return (await this.update('blog_suggestions', id, data))[0];
+    }
+
+    async getExistingSuggestionUrls() {
+        const all = await this.select('blog_suggestions', {}, { order: 'created_at.desc' });
+        return all.map(s => s.source_url).filter(Boolean);
+    }
+
     // === NEWSLETTER CAMPAIGNS ===
 
     async getNewsletterCampaigns() {
@@ -676,8 +706,5 @@ class SupabaseClient {
     }
 }
 
-// Instance globale
-const supabase = new SupabaseClient();
-
-// Export pour utilisation dans le dashboard
-window.supabase = supabase;
+// Instance globale (pas de const/let pour eviter conflit avec CDN @supabase/supabase-js)
+window.supabase = new SupabaseClient();

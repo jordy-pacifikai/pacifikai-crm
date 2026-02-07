@@ -1,413 +1,195 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PACIFIK'AI | Connexion</title>
     <link rel="icon" type="image/png" href="https://pacifikai.com/assets/favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* Apple-style Design System */
-        :root {
-            --bg: #ffffff;
-            --bg-subtle: #f5f5f7;
-            --bg-muted: #e8e8ed;
-            --border: #d2d2d7;
-            --text: #1d1d1f;
-            --text-muted: #6e6e73;
-            --text-dim: #86868b;
-            --accent: #0071e3;
-            --accent-hover: #0077ed;
-            --green: #34c759;
-            --red: #ff3b30;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
-            --transition: 200ms ease;
-        }
-
-        [data-theme="dark"] {
-            --bg: #000000;
-            --bg-subtle: #1c1c1e;
-            --bg-muted: #2c2c2e;
-            --border: #38383a;
-            --text: #f5f5f7;
-            --text-muted: #98989d;
-            --text-dim: #6e6e73;
-            --accent: #0a84ff;
-            --accent-hover: #409cff;
-            --green: #30d158;
-            --red: #ff453a;
-            --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: var(--bg-subtle);
-            color: var(--text);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f8f6f3;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
+            padding: 24px;
         }
-
         .login-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 3rem 2.5rem;
-            box-shadow: var(--shadow-card);
-            animation: fadeIn 0.4s ease;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            border: 1px solid #e8e5e0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
         }
-
         .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .logo-img {
-            height: 48px;
-            width: auto;
-        }
-
-        [data-theme="dark"] .logo-img {
-            filter: brightness(0) invert(1);
-        }
-
-        .login-title {
             text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 32px;
         }
-
-        .login-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9375rem;
-            margin-bottom: 2rem;
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a3a3a;
+            letter-spacing: -0.5px;
         }
-
+        .logo-text span {
+            color: #4a7c7c;
+        }
+        .logo-sub {
+            font-size: 13px;
+            color: #8a8a8a;
+            margin-top: 4px;
+        }
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
-
-        .form-label {
+        label {
             display: block;
-            font-size: 0.8125rem;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
+            color: #4a4a4a;
+            margin-bottom: 6px;
         }
-
-        .form-input {
+        input {
             width: 100%;
-            padding: 0.875rem 1rem;
-            background: var(--bg-subtle);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            color: var(--text);
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color var(--transition), box-shadow var(--transition);
-        }
-
-        .form-input:focus {
+            padding: 10px 14px;
+            border: 1px solid #e8e5e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            background: #f8f6f3;
+            transition: border-color 0.2s, box-shadow 0.2s;
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
         }
-
-        [data-theme="dark"] .form-input:focus {
-            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.25);
+        input:focus {
+            border-color: #4a7c7c;
+            box-shadow: 0 0 0 3px rgba(26, 58, 58, 0.1);
         }
-
-        .form-input::placeholder {
-            color: var(--text-dim);
+        input::placeholder {
+            color: #b0b0b0;
         }
-
-        .btn {
+        .btn-login {
             width: 100%;
-            padding: 1rem 1.5rem;
+            padding: 11px 0;
+            background: linear-gradient(135deg, #1a3a3a 0%, #4a7c7c 100%);
+            color: #fff;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            transition: opacity 0.2s, transform 0.1s;
+            margin-top: 8px;
         }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
+        .btn-login:hover {
+            opacity: 0.9;
         }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
+        .btn-login:active {
+            transform: scale(0.98);
         }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
+        .btn-login:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
-
-        .btn svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .error-message {
-            background: rgba(255, 59, 48, 0.1);
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            color: var(--red);
-            padding: 0.875rem 1rem;
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            margin-bottom: 1.25rem;
+        .error-msg {
             display: none;
+            background: rgba(196, 90, 90, 0.1);
+            color: #c45a5a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(196, 90, 90, 0.2);
         }
-
-        .error-message.show {
+        .error-msg.visible {
             display: block;
-            animation: shake 0.4s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-dim);
-            font-size: 0.8125rem;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            color: var(--text-muted);
-        }
-
-        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
-        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-        [data-theme="light"] .theme-toggle .icon-sun { display: none; }
-        [data-theme="light"] .theme-toggle .icon-moon { display: block; }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" onclick="toggleTheme()" title="Changer le theme">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-    </button>
-
     <div class="login-container">
         <div class="login-card">
             <div class="logo">
-                <img src="https://pacifikai.com/assets/logo.png" alt="PACIFIK'AI" class="logo-img">
+                <div class="logo-text">PACIFIK<span>'AI</span></div>
+                <div class="logo-sub">Dashboard CRM</div>
             </div>
 
-            <h1 class="login-title">Connexion</h1>
-            <p class="login-subtitle">Accede a ton dashboard d'agence IA</p>
+            <div class="error-msg" id="error-msg"></div>
 
-            <div id="error-message" class="error-message"></div>
-
-            <form id="login-form">
+            <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label class="form-label" for="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        class="form-input"
-                        placeholder="jordy@pacifikai.com"
-                        required
-                        autocomplete="email"
-                    >
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="votre@email.com" required autofocus>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label" for="password">Mot de passe</label>
-                    <input
-                        type="password"
-                        id="password"
-                        class="form-input"
-                        placeholder="••••••••••••"
-                        required
-                        autocomplete="current-password"
-                    >
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" placeholder="Mot de passe" required>
                 </div>
-
-                <button type="submit" class="btn btn-primary" id="login-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                        <polyline points="10 17 15 12 10 7"/>
-                        <line x1="15" y1="12" x2="3" y2="12"/>
-                    </svg>
-                    Se connecter
-                </button>
+                <button type="submit" class="btn-login" id="btn-login">Se connecter</button>
             </form>
-
-            <div class="footer">
-                Dashboard reserve aux membres de l'equipe PACIFIK'AI
-            </div>
         </div>
     </div>
 
-    <script src="supabase-client.js"></script>
     <script>
-        // Theme toggle
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('pacifikai-theme', newTheme);
-        }
-
-        // Initialize theme
-        (function() {
-            const savedTheme = localStorage.getItem('pacifikai-theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            }
-        })();
+        const SUPABASE_URL = 'https://ogsimsfqwibcmotaeevb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nc2ltc2Zxd2liY21vdGFlZXZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyMzY3NDYsImV4cCI6MjA4NDgxMjc0Nn0.3UdAzq1GQYOlZRlZ7-pXVMVJMEjDmTd68jUjoJWeAEI';
 
         // Check if already logged in
-        (async () => {
-            const restored = await supabase.restoreSession();
-            if (restored) {
-                window.location.href = 'index.html';
-            }
-        })();
+        const stored = localStorage.getItem('supabase_session');
+        if (stored) {
+            try {
+                const session = JSON.parse(stored);
+                if (session.access_token) {
+                    window.location.href = 'index.html';
+                }
+            } catch(e) {}
+        }
 
-        // Login form handler
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        async function handleLogin(e) {
             e.preventDefault();
-
-            const email = document.getElementById('email').value.trim();
+            const btn = document.getElementById('btn-login');
+            const errorEl = document.getElementById('error-msg');
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const btn = document.getElementById('login-btn');
-            const errorDiv = document.getElementById('error-message');
 
-            // Hide previous error
-            errorDiv.classList.remove('show');
-
-            // Disable button
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div> Connexion...';
+            btn.textContent = 'Connexion...';
+            errorEl.classList.remove('visible');
 
             try {
-                await supabase.signIn(email, password);
+                const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-                // Success - redirect to dashboard
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error_description || error.message || 'Email ou mot de passe incorrect');
+                }
+
+                const data = await response.json();
+                localStorage.setItem('supabase_session', JSON.stringify(data));
                 window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Login error:', error);
-                errorDiv.textContent = error.message || 'Email ou mot de passe incorrect';
-                errorDiv.classList.add('show');
-
-                // Re-enable button
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.add('visible');
                 btn.disabled = false;
-                btn.innerHTML = `
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                        <polyline points="10 17 15 12 10 7"/>
-                        <line x1="15" y1="12" x2="3" y2="12"/>
-                    </svg>
-                    Se connecter
-                `;
+                btn.textContent = 'Se connecter';
             }
-        });
+        }
     </script>
 </body>
 </html>

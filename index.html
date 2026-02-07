@@ -1465,6 +1465,8 @@
         .badge.chaud { background: var(--orange-glow); color: var(--orange); }
         .badge.tiede { background: var(--yellow-glow); color: var(--yellow); }
         .badge.froid { background: var(--accent-glow); color: var(--accent); }
+        .badge.messenger-src { background: #0084FF22; color: #0084FF; }
+        .badge.manual-src { background: var(--bg-muted); color: var(--text-dim); }
 
         .pipeline-card-priority {
             font-size: 0.625rem;
@@ -2395,7 +2397,7 @@
 
         .compact-row {
             display: grid;
-            grid-template-columns: 2.5rem 1fr 120px 100px 100px 80px 60px;
+            grid-template-columns: 2.5rem 1fr 80px 120px 100px 100px 80px 60px;
             align-items: center;
             gap: 0.75rem;
             padding: 0.5rem 1rem;
@@ -2467,7 +2469,7 @@
 
         .compact-header {
             display: grid;
-            grid-template-columns: 2.5rem 1fr 120px 100px 100px 80px 60px;
+            grid-template-columns: 2.5rem 1fr 80px 120px 100px 100px 80px 60px;
             gap: 0.75rem;
             padding: 0.5rem 1rem;
             border-bottom: 2px solid var(--border);
@@ -4864,6 +4866,261 @@
             border-radius: 50%;
         }
         .calendar-day.has-post.published::after { background: var(--green); }
+        .calendar-day.has-blog::before {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: calc(50% + 6px);
+            width: 6px;
+            height: 6px;
+            background: #0891b2;
+            border-radius: 50%;
+        }
+        .calendar-day.has-blog-planned::before {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: calc(50% + 6px);
+            width: 6px;
+            height: 6px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        /* Blog Tabs */
+        .blog-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .blog-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .blog-tab:hover { color: var(--text); }
+        .blog-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .blog-tab-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: var(--bg-muted);
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 6px;
+        }
+        .blog-tab.active .blog-tab-count { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+
+        /* Blog Dropdown Button */
+        .btn-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .btn-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 220px;
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+        .btn-dropdown-menu.show { display: block; }
+        .btn-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: background 0.1s;
+            text-align: left;
+        }
+        .btn-dropdown-item:hover { background: var(--bg-muted); }
+        .btn-dropdown-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        /* Suggestions Section */
+        .suggestions-search-bar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1.25rem;
+        }
+        .suggestions-topics {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .topic-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            background: rgba(8, 145, 178, 0.1);
+            color: #0891b2;
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .topic-chip.active { background: #0891b2; color: #fff; border-color: #0891b2; }
+        .topic-chip:hover { border-color: #0891b2; }
+
+        .search-history-section {
+            margin-bottom: 1.25rem;
+        }
+        .search-history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        .search-history-item:last-child { border-bottom: none; }
+
+        .suggestion-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: border-color 0.15s;
+        }
+        .suggestion-card:hover { border-color: var(--accent); }
+        .suggestion-card.planned { border-left: 3px solid #f59e0b; }
+        .suggestion-card.created { border-left: 3px solid var(--green); opacity: 0.7; }
+        .suggestion-card.rejected { opacity: 0.4; }
+        .suggestion-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+        .suggestion-score-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .suggestion-score-label {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .score-high { color: var(--green); }
+        .score-mid { color: #f59e0b; }
+        .score-low { color: var(--red); }
+        .suggestion-body { flex: 1; min-width: 0; }
+        .suggestion-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+            flex-wrap: wrap;
+        }
+        .suggestion-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+        .suggestion-excerpt {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+        .suggestion-stats {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+        .suggestion-stat {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .suggestion-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+            flex-shrink: 0;
+        }
+        .suggestion-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .suggestion-btn:hover { border-color: var(--accent); }
+        .suggestion-btn.validate { background: #0891b2; color: #fff; border-color: #0891b2; }
+        .suggestion-btn.validate:hover { background: #0e7490; }
+        .suggestion-btn.generate { background: var(--green); color: #fff; border-color: var(--green); }
+        .suggestion-btn.reject { color: var(--red); }
+        .suggestion-btn.reject:hover { background: rgba(239, 68, 68, 0.1); border-color: var(--red); }
+
+        .blog-searching-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .blog-searching-overlay .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: #0891b2;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .calendar-day-number {
             font-size: 0.75rem;
@@ -6803,6 +7060,19 @@
                                 </button>
                                 <div class="dropdown-menu" id="status-dropdown"></div>
                             </div>
+                            <div class="dropdown">
+                                <button class="dropdown-btn" onclick="toggleDropdown('source-dropdown')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                    <span id="source-filter-label">Toutes sources</span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                                <div class="dropdown-menu" id="source-dropdown">
+                                    <div class="dropdown-item" onclick="setSourceFilter('all')">Toutes sources</div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-item" onclick="setSourceFilter('messenger')">Messenger</div>
+                                    <div class="dropdown-item" onclick="setSourceFilter('manual')">Manuel</div>
+                                </div>
+                            </div>
                             <button class="btn btn-ghost" id="my-prospects-btn" onclick="toggleMyProspects()" style="font-size:0.8rem;padding:6px 12px;border-radius:8px;border:1px solid var(--accent);color:var(--accent);font-weight:500;gap:4px;">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                 Mes prospects
@@ -6920,6 +7190,7 @@
                                             <tr>
                                                 <th class="sortable" data-sort="company">Entreprise</th>
                                                 <th>Contact</th>
+                                                <th>Source</th>
                                                 <th class="sortable" data-sort="sector">Secteur</th>
                                                 <th class="sortable" data-sort="status">Status</th>
                                                 <th class="sortable" data-sort="value">Valeur</th>
@@ -7441,10 +7712,10 @@
                         </select>
                         <select class="filter-select" id="blog-status-filter" onchange="filterBlogArticles()">
                             <option value="all">Tous status</option>
-                            <option value="Draft">Brouillon</option>
-                            <option value="Ready">Pret</option>
-                            <option value="Published">Publie</option>
-                            <option value="Scheduled">Planifie</option>
+                            <option value="draft">Brouillon</option>
+                            <option value="ready">Pret</option>
+                            <option value="published">Publie</option>
+                            <option value="scheduled">Planifie</option>
                         </select>
                         <button class="btn btn-ghost" onclick="loadBlogArticles()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -7454,16 +7725,29 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                             Voir Blog
                         </a>
-                        <button class="btn btn-primary" onclick="openCreateBlogModal()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            Nouvel Article
-                        </button>
+                        <div class="btn-dropdown-wrapper">
+                            <button class="btn btn-primary" onclick="toggleBlogDropdown()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Nouvel Article
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px; margin-left: 4px;"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div class="btn-dropdown-menu" id="blog-dropdown-menu">
+                                <button class="btn-dropdown-item" onclick="closeBlogDropdown(); switchBlogTab('suggestions'); searchBlogTrends();">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    Rechercher des tendances
+                                </button>
+                                <button class="btn-dropdown-item" onclick="closeBlogDropdown(); openCreateBlogModal();">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Creer manuellement
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
                 <div class="content" style="padding: 1.5rem 2rem;">
                     <!-- Blog KPIs -->
-                    <div class="stats-row" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+                    <div class="stats-row" style="grid-template-columns: repeat(5, 1fr); margin-bottom: 1.5rem;">
                         <div class="stat">
                             <div class="stat-label">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -7492,16 +7776,124 @@
                             </div>
                             <div class="stat-value" style="color: var(--text-muted);" id="kpi-blog-drafts">0</div>
                         </div>
+                        <div class="stat">
+                            <div class="stat-label">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                Suggestions
+                            </div>
+                            <div class="stat-value" style="color: #0891b2;" id="kpi-blog-suggestions">0</div>
+                        </div>
                     </div>
 
-                    <!-- Blog Articles Grid -->
-                    <div class="section-header" style="margin-bottom: 1rem;">
-                        <h2 style="font-size: 1rem; font-weight: 600;">Articles</h2>
+                    <!-- Blog Sub-Tabs -->
+                    <div class="blog-tabs">
+                        <button class="blog-tab active" id="blog-tab-articles" onclick="switchBlogTab('articles')">
+                            Articles <span class="blog-tab-count" id="blog-tab-articles-count">0</span>
+                        </button>
+                        <button class="blog-tab" id="blog-tab-suggestions" onclick="switchBlogTab('suggestions')">
+                            Suggestions & Recherche <span class="blog-tab-count" id="blog-tab-suggestions-count">0</span>
+                        </button>
                     </div>
-                    <div class="blog-articles-grid" id="blog-articles-grid">
-                        <!-- Generated by JS -->
-                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                            Chargement des articles...
+
+                    <!-- Tab: Articles (existing) -->
+                    <div id="blog-content-articles">
+                        <div class="blog-articles-grid" id="blog-articles-grid">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                Chargement des articles...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Suggestions & Recherche -->
+                    <div id="blog-content-suggestions" style="display: none;">
+                        <!-- Search Bar -->
+                        <div class="suggestions-search-bar">
+                            <div class="suggestions-topics" id="blog-topics-container">
+                                <span class="topic-chip active" data-topic="Aviation" onclick="toggleBlogTopic(this)">Aviation</span>
+                                <span class="topic-chip active" data-topic="Hotellerie" onclick="toggleBlogTopic(this)">Hotellerie</span>
+                                <span class="topic-chip" data-topic="Finance" onclick="toggleBlogTopic(this)">Finance</span>
+                                <span class="topic-chip" data-topic="Restauration" onclick="toggleBlogTopic(this)">Restauration</span>
+                                <span class="topic-chip" data-topic="Tourisme" onclick="toggleBlogTopic(this)">Tourisme</span>
+                                <span class="topic-chip" data-topic="Technologie" onclick="toggleBlogTopic(this)">Technologie</span>
+                                <span class="topic-chip" data-topic="Sante" onclick="toggleBlogTopic(this)">Sante</span>
+                                <span class="topic-chip" data-topic="Commerce" onclick="toggleBlogTopic(this)">Commerce</span>
+                            </div>
+                            <button class="btn btn-primary" id="blog-search-btn" onclick="searchBlogTrends()" style="white-space: nowrap;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                Rechercher
+                            </button>
+                        </div>
+
+                        <!-- Search History -->
+                        <div class="search-history-section" id="blog-search-history" style="display: none;">
+                            <div class="section-header" style="margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">Historique des recherches</h3>
+                            </div>
+                            <div id="blog-search-history-list"></div>
+                        </div>
+
+                        <!-- Suggestions Filter -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                            <h3 style="font-size: 0.9375rem; font-weight: 600;">Suggestions</h3>
+                            <select class="filter-select" id="blog-suggestion-status-filter" onchange="renderBlogSuggestions()" style="font-size: 0.8rem;">
+                                <option value="all">Toutes</option>
+                                <option value="suggestion">En attente</option>
+                                <option value="planned">Planifiees</option>
+                                <option value="created">Creees</option>
+                                <option value="rejected">Rejetees</option>
+                            </select>
+                        </div>
+
+                        <!-- Searching Overlay -->
+                        <div id="blog-searching-overlay" style="display: none;" class="blog-searching-overlay">
+                            <div class="spinner"></div>
+                            <p>Recherche des tendances IA en cours...</p>
+                            <p style="font-size: 0.75rem; margin-top: 0.25rem;">Firecrawl + Claude analysent le web</p>
+                        </div>
+
+                        <!-- Suggestions List -->
+                        <div id="blog-suggestions-list">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.5;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <p>Clique "Rechercher" pour trouver des idees d'articles</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plan Suggestion Modal -->
+                    <div class="modal-overlay" id="plan-suggestion-modal" style="display: none;" onclick="closePlanModal(event)">
+                        <div class="edit-content-modal" onclick="event.stopPropagation()" style="max-width: 480px;">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                Planifier cette suggestion
+                            </h3>
+                            <input type="hidden" id="plan-suggestion-id" />
+                            <div class="edit-form-group">
+                                <label>Titre de l'article</label>
+                                <input type="text" id="plan-suggestion-title" placeholder="Titre..." />
+                            </div>
+                            <div class="edit-form-group">
+                                <label>Categorie</label>
+                                <select id="plan-suggestion-category">
+                                    <option value="Aviation">Aviation</option>
+                                    <option value="Hotellerie">Hotellerie</option>
+                                    <option value="Restauration">Restauration</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Tourisme">Tourisme</option>
+                                    <option value="Logistique">Logistique</option>
+                                    <option value="Technologie">Technologie</option>
+                                    <option value="Sante">Sante</option>
+                                    <option value="Commerce">Commerce</option>
+                                </select>
+                            </div>
+                            <div class="edit-form-group">
+                                <label>Date de publication prevue</label>
+                                <input type="date" id="plan-suggestion-date" />
+                            </div>
+                            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                                <button class="btn btn-ghost" onclick="closePlanModal()">Annuler</button>
+                                <button class="btn btn-primary" onclick="confirmPlanSuggestion()">Planifier</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -7547,10 +7939,10 @@
                         <div class="edit-form-group">
                             <label>Status</label>
                             <select id="blog-article-status">
-                                <option value="Draft">Brouillon</option>
-                                <option value="Ready">Pret</option>
-                                <option value="Scheduled">Planifie</option>
-                                <option value="Published">Publie</option>
+                                <option value="draft">Brouillon</option>
+                                <option value="ready">Pret</option>
+                                <option value="scheduled">Planifie</option>
+                                <option value="published">Publie</option>
                             </select>
                         </div>
                     </div>
@@ -7680,10 +8072,10 @@
                         <div style="display: flex; gap: 0.5rem;">
                             <select class="filter-select" id="newsletter-status-filter" onchange="filterNewsletterCampaigns()">
                                 <option value="all">Tous status</option>
-                                <option value="Draft">Brouillon</option>
-                                <option value="Ready">Pret</option>
-                                <option value="Scheduled">Planifie</option>
-                                <option value="Sent">Envoye</option>
+                                <option value="draft">Brouillon</option>
+                                <option value="ready">Pret</option>
+                                <option value="scheduled">Planifie</option>
+                                <option value="sent">Envoye</option>
                             </select>
                         </div>
                     </div>
@@ -7721,9 +8113,9 @@
                                 <div class="edit-form-group">
                                     <label>Status</label>
                                     <select id="newsletter-status">
-                                        <option value="Draft">Brouillon</option>
-                                        <option value="Ready">Pret a envoyer</option>
-                                        <option value="Scheduled">Planifie</option>
+                                        <option value="draft">Brouillon</option>
+                                        <option value="ready">Pret a envoyer</option>
+                                        <option value="scheduled">Planifie</option>
                                     </select>
                                 </div>
                                 <div class="edit-form-group">
@@ -9104,6 +9496,7 @@
         let currentStatusFilter = 'all';
         let currentDateFilter = 'all';
         let currentTempFilter = 'all';
+        let currentSourceFilter = 'all';
         let assetsFilterActive = false;
         let searchQuery = '';
 
@@ -9674,8 +10067,41 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                     scoreFit: p.score_fit,
                     scoreRaison: p.score_raison,
                     assignedTo: p.assigned_to,
-                    supabaseId: p.id
+                    supabaseId: p.id,
+                    source: 'manual'
                 }));
+
+                // Merger les prospects Messenger dans la liste principale
+                try {
+                    const messengerProspects = await supabase.getMessengerProspects();
+                    if (messengerProspects && messengerProspects.length > 0) {
+                        const tempMap = { cold: 'froid', warm: 'tiede', hot: 'hot' };
+                        const stageMap = { discovery: 'lead', qualification: 'contacted', proposal: 'proposal', negotiation: 'meeting', won: 'won', lost: 'lost' };
+                        messengerProspects.forEach(mp => {
+                            const exists = prospects.find(p => p.messenger_sender_id === mp.sender_id);
+                            if (!exists) {
+                                prospects.push({
+                                    id: mp.id,
+                                    name: mp.name || '',
+                                    company: mp.company || 'Prospect Messenger',
+                                    sector: mp.sector || 'Non defini',
+                                    status: stageMap[mp.conversation_stage] || 'lead',
+                                    value: 0,
+                                    date: (mp.first_contact_at || mp.created_at || '').split('T')[0],
+                                    priority: tempMap[mp.temperature] || 'froid',
+                                    source: 'messenger',
+                                    messenger_sender_id: mp.sender_id,
+                                    email: mp.email || '',
+                                    phone: mp.phone || '',
+                                    notes: mp.main_problem || ''
+                                });
+                            }
+                        });
+                        console.log(`[Supabase] Merged ${messengerProspects.length} messenger prospects`);
+                    }
+                } catch (err) {
+                    console.error('[Supabase] Failed to merge messenger prospects:', err);
+                }
 
                 // Transformer tasks
                 airtableTasks = supabaseTasks.map(t => ({
@@ -9946,6 +10372,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                         email: f['Email'] || '',
                         phone: f['Téléphone'] || f['Phone'] || '',
                         notes: f['Notes'] || '',
+                        source: f['Source'] || 'manual',
                         assets: [] // Will be populated from assets if linked
                     };
                 });
@@ -10252,6 +10679,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                         </div>
                     </td>
                     <td>${p.name || '-'}</td>
+                    <td>${p.source === 'messenger' ? '<span class="badge messenger-src">Messenger</span>' : '<span class="badge manual-src">Manuel</span>'}</td>
                     <td>${p.sector}</td>
                     <td><span class="badge ${p.status}"><span class="badge-dot"></span>${statusLabel(p.status)}</span></td>
                     <td>${fmtXPF(p.value)}</td>
@@ -11088,6 +11516,13 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             toggleDropdown('status-dropdown');
         }
 
+        function setSourceFilter(source) {
+            currentSourceFilter = source;
+            document.getElementById('source-filter-label').textContent = source === 'all' ? 'Toutes sources' : (source === 'messenger' ? 'Messenger' : 'Manuel');
+            renderProspectsViews();
+            toggleDropdown('source-dropdown');
+        }
+
         function setSortBy(sort) {
             currentSort = sort;
             document.querySelectorAll('#sort-dropdown .dropdown-item').forEach(item => {
@@ -11269,11 +11704,13 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             currentDateFilter = 'all';
             currentTempFilter = 'all';
             currentAssigneeFilter = 'all';
+            currentSourceFilter = 'all';
             assetsFilterActive = false;
             currentSort = 'priority';
             document.getElementById('search-prospects').value = '';
             document.getElementById('sector-filter-label').textContent = 'Tous secteurs';
             document.getElementById('status-filter-label').textContent = 'Tous status';
+            document.getElementById('source-filter-label').textContent = 'Toutes sources';
             document.getElementById('date-filter-label').textContent = 'Toutes dates';
             document.getElementById('assignee-filter-label').textContent = 'Tous assignes';
             document.getElementById('sort-label').textContent = 'Priorite';
@@ -11302,6 +11739,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             if (assetsFilterActive) tags.push({ label: 'Avec assets', clear: () => toggleAssetsFilter() });
             if (currentAssigneeFilter !== 'all') tags.push({ label: `Assigne: ${currentAssigneeFilter === 'unassigned' ? 'Non assigne' : getMemberName(currentAssigneeFilter)}`, clear: () => setAssigneeFilter('all') });
             if (currentDateFilter !== 'all') tags.push({ label: `Date: ${currentDateFilter}`, clear: () => setDateFilter('all') });
+            if (currentSourceFilter !== 'all') tags.push({ label: `Source: ${currentSourceFilter === 'messenger' ? 'Messenger' : 'Manuel'}`, clear: () => setSourceFilter('all') });
 
             if (tags.length === 0) { container.innerHTML = ''; return; }
 
@@ -11347,7 +11785,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             }
 
             // CSV Header
-            const headers = ['Entreprise', 'Contact', 'Email', 'Telephone', 'Poste', 'Secteur', 'Status', 'Priorite', 'Valeur XPF', 'Date', 'Assigne a'];
+            const headers = ['Entreprise', 'Contact', 'Email', 'Telephone', 'Poste', 'Secteur', 'Source', 'Status', 'Priorite', 'Valeur XPF', 'Date', 'Assigne a'];
 
             // CSV Rows
             const rows = filtered.map(p => [
@@ -11357,6 +11795,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 p.phone || '',
                 p.poste || '',
                 p.sector || '',
+                p.source === 'messenger' ? 'Messenger' : 'Manuel',
                 statusLabel(p.status) || '',
                 priorityLabel(p.priority) || '',
                 p.value || 0,
@@ -11447,6 +11886,11 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             // Temperature filter
             if (currentTempFilter !== 'all') {
                 filtered = filtered.filter(p => p.priority === currentTempFilter);
+            }
+
+            // Source filter
+            if (currentSourceFilter !== 'all') {
+                filtered = filtered.filter(p => (p.source || 'manual') === currentSourceFilter);
             }
 
             // Assets filter
@@ -11564,6 +12008,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return `<div class="grid-card ${p.priority || 'froid'} ${hasAssets ? 'has-assets' : ''}" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="grid-card-header">
                         <div class="grid-card-company">${p.company}</div>
+                        ${p.source === 'messenger' ? '<span class="badge messenger-src" style="font-size:10px;padding:2px 6px;">Messenger</span>' : ''}
                         <span class="grid-card-badge ${p.priority || 'froid'}">${priorityLabel(p.priority)}</span>
                         <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
@@ -11595,6 +12040,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             const header = `<div class="compact-header">
                 <span></span>
                 <span>Entreprise</span>
+                <span>Source</span>
                 <span>Secteur</span>
                 <span>Status</span>
                 <span>Valeur</span>
@@ -11618,6 +12064,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return `<div class="compact-row" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="avatar" style="background:${color}">${initials}</div>
                     <div class="compact-company">${p.company}</div>
+                    <div class="compact-source">${p.source === 'messenger' ? '<span class="badge messenger-src">Messenger</span>' : '<span class="badge manual-src">Manuel</span>'}</div>
                     <div class="compact-sector">${p.sector || '-'}</div>
                     <div class="compact-status">${statusLabel(p.status)}</div>
                     <div class="compact-value">${fmtXPF(p.value)}</div>
@@ -16905,23 +17352,44 @@ Reponds UNIQUEMENT avec le JSON, sans texte supplementaire.`;
             // Current month - use Airtable content if available
             const posts = airtableContent.length > 0 ? airtableContent : facebookPosts;
 
+            // Blog events: published articles + planned suggestions
+            const blogEvents = [
+                ...(blogArticles || []).filter(a => a.publishDate).map(a => ({
+                    date: a.publishDate.split('T')[0],
+                    title: a.title,
+                    type: 'blog'
+                })),
+                ...(blogSuggestions || []).filter(s => s.status === 'planned' && s.planned_date).map(s => ({
+                    date: s.planned_date,
+                    title: s.suggested_title || s.title,
+                    type: 'blog-planned'
+                }))
+            ];
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const isToday = dateStr === todayStr;
                 const dayPosts = posts.filter(p => p.date === dateStr);
                 const hasPost = dayPosts.length > 0;
                 const isPublished = dayPosts.some(p => p.status === 'Publié' || p.status === 'published');
+                const dayBlog = blogEvents.filter(b => b.date === dateStr);
+                const hasBlog = dayBlog.some(b => b.type === 'blog');
+                const hasBlogPlanned = dayBlog.some(b => b.type === 'blog-planned');
 
                 let classes = 'calendar-day';
                 if (isToday) classes += ' today';
                 if (hasPost) classes += ' has-post';
                 if (isPublished) classes += ' published';
+                if (hasBlog) classes += ' has-blog';
+                if (hasBlogPlanned) classes += ' has-blog-planned';
 
-                const preview = dayPosts.length > 0 ? `${dayPosts.length} post(s): ${dayPosts[0].titre || dayPosts[0].preview || ''}` : '';
+                const postPreview = dayPosts.length > 0 ? `${dayPosts.length} post(s): ${dayPosts[0].titre || dayPosts[0].preview || ''}` : '';
+                const blogPreview = dayBlog.length > 0 ? `${dayBlog.length} article(s): ${dayBlog[0].title}` : '';
+                const preview = [postPreview, blogPreview].filter(Boolean).join(' | ');
 
                 html += `<div class="${classes}" onclick="selectCalendarDay('${dateStr}')" title="${preview}">
                     <span class="calendar-day-number">${day}</span>
-                    ${hasPost ? `<span style="position: absolute; top: 2px; right: 2px; font-size: 0.5rem; color: var(--text-dim);">${dayPosts.length}</span>` : ''}
+                    ${(hasPost || dayBlog.length > 0) ? `<span style="position: absolute; top: 2px; right: 2px; font-size: 0.5rem; color: var(--text-dim);">${dayPosts.length + dayBlog.length}</span>` : ''}
                 </div>`;
             }
 
@@ -18192,9 +18660,13 @@ Reponds UNIQUEMENT avec le texte du post.`;
         // ============================================
 
         let blogArticles = [];
+        let blogSuggestions = [];
+        let blogSearches = [];
+        let currentBlogTab = 'articles';
         let currentBlogCategoryFilter = 'all';
         let currentBlogStatusFilter = 'all';
         let editingBlogArticleId = null;
+        let blogSearching = false;
 
         // ===== MESSAGES MODULE (Supabase) =====
         let messengerConversations = [];
@@ -19051,6 +19523,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
                 renderBlogArticles();
                 updateBlogStats();
+                loadBlogSuggestions();
                 if (blogArticles.length > 0) {
                     showToast(`${blogArticles.length} articles charges`);
                 }
@@ -19123,9 +19596,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         function updateBlogStats() {
             const total = blogArticles.length;
-            const published = blogArticles.filter(a => a.status === 'Published').length;
-            const scheduled = blogArticles.filter(a => a.status === 'Scheduled').length;
-            const drafts = blogArticles.filter(a => a.status === 'Draft' || a.status === 'Ready').length;
+            const published = blogArticles.filter(a => a.status === 'published').length;
+            const scheduled = blogArticles.filter(a => a.status === 'scheduled').length;
+            const drafts = blogArticles.filter(a => a.status === 'draft' || a.status === 'ready').length;
 
             const kpiTotal = document.getElementById('kpi-blog-total');
             const kpiPublished = document.getElementById('kpi-blog-published');
@@ -19176,7 +19649,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             document.getElementById('blog-article-title').value = '';
             document.getElementById('blog-article-slug').value = '';
             document.getElementById('blog-article-category').value = 'Aviation';
-            document.getElementById('blog-article-status').value = 'Draft';
+            document.getElementById('blog-article-status').value = 'draft';
             document.getElementById('blog-article-excerpt').value = '';
             document.getElementById('blog-article-content').value = '';
             document.getElementById('blog-article-image').value = '';
@@ -19202,7 +19675,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             document.getElementById('blog-article-title').value = article.title || '';
             document.getElementById('blog-article-slug').value = article.slug || '';
             document.getElementById('blog-article-category').value = article.category || 'Aviation';
-            document.getElementById('blog-article-status').value = article.status || 'Draft';
+            document.getElementById('blog-article-status').value = article.status || 'draft';
             document.getElementById('blog-article-excerpt').value = article.excerpt || '';
             document.getElementById('blog-article-content').value = article.content || '';
             document.getElementById('blog-article-image').value = article.heroImage || '';
@@ -19259,10 +19732,22 @@ Reponds UNIQUEMENT avec le texte du post.`;
             };
 
             try {
+                let savedArticle;
                 if (id) {
-                    await supabase.updateBlogArticle(id, data);
+                    savedArticle = await supabase.updateBlogArticle(id, data);
                 } else {
-                    await supabase.createBlogArticle(data);
+                    savedArticle = await supabase.createBlogArticle(data);
+                }
+
+                // Link to suggestion if generated from one
+                const suggestionId = document.getElementById('blog-article-id').dataset?.suggestionId;
+                if (suggestionId && savedArticle?.id) {
+                    await supabase.updateBlogSuggestion(suggestionId, {
+                        status: 'created',
+                        article_id: savedArticle.id,
+                        updated_at: new Date().toISOString()
+                    });
+                    delete document.getElementById('blog-article-id').dataset.suggestionId;
                 }
 
                 closeBlogModal();
@@ -19272,6 +19757,340 @@ Reponds UNIQUEMENT avec le texte du post.`;
             } catch (error) {
                 console.error('[Blog] Save error:', error);
                 showToast('Erreur: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // BLOG SUGGESTIONS & RESEARCH
+        // ============================================
+
+        const N8N_WEBHOOK_BASE = 'https://n8n.srv1140766.hstgr.cloud/webhook';
+
+        function toggleBlogDropdown() {
+            const menu = document.getElementById('blog-dropdown-menu');
+            menu.classList.toggle('show');
+            // Close on outside click
+            if (menu.classList.contains('show')) {
+                setTimeout(() => {
+                    document.addEventListener('click', closeBlogDropdownOutside, { once: true });
+                }, 10);
+            }
+        }
+        function closeBlogDropdown() {
+            document.getElementById('blog-dropdown-menu')?.classList.remove('show');
+        }
+        function closeBlogDropdownOutside(e) {
+            const wrapper = document.querySelector('.btn-dropdown-wrapper');
+            if (!wrapper?.contains(e.target)) closeBlogDropdown();
+        }
+
+        function switchBlogTab(tab) {
+            currentBlogTab = tab;
+            document.getElementById('blog-tab-articles')?.classList.toggle('active', tab === 'articles');
+            document.getElementById('blog-tab-suggestions')?.classList.toggle('active', tab === 'suggestions');
+            document.getElementById('blog-content-articles').style.display = tab === 'articles' ? '' : 'none';
+            document.getElementById('blog-content-suggestions').style.display = tab === 'suggestions' ? '' : 'none';
+        }
+
+        function toggleBlogTopic(chip) {
+            chip.classList.toggle('active');
+        }
+
+        function getSelectedTopics() {
+            const chips = document.querySelectorAll('#blog-topics-container .topic-chip.active');
+            return Array.from(chips).map(c => c.dataset.topic);
+        }
+
+        async function searchBlogTrends() {
+            if (blogSearching) return;
+            const topics = getSelectedTopics();
+            if (topics.length === 0) {
+                showToast('Selectionne au moins un sujet');
+                return;
+            }
+
+            blogSearching = true;
+            const btn = document.getElementById('blog-search-btn');
+            const overlay = document.getElementById('blog-searching-overlay');
+            const list = document.getElementById('blog-suggestions-list');
+            if (btn) btn.disabled = true;
+            if (overlay) overlay.style.display = 'flex';
+            if (list) list.style.display = 'none';
+
+            try {
+                const excludeUrls = await supabase.getExistingSuggestionUrls();
+
+                const response = await fetch(`${N8N_WEBHOOK_BASE}/blog-research`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topics, exclude_urls: excludeUrls })
+                });
+                const data = await response.json();
+                const suggestions = data.suggestions || [];
+
+                if (suggestions.length > 0) {
+                    // Store search
+                    const search = await supabase.createBlogSearch({
+                        query: topics.join(', '),
+                        topics: topics,
+                        results_count: suggestions.length
+                    });
+
+                    // Store suggestions
+                    const toInsert = suggestions.map(s => ({
+                        search_id: search.id,
+                        title: s.title || '',
+                        suggested_title: s.suggested_title || s.title || '',
+                        excerpt: s.excerpt || '',
+                        category: s.category || 'Technologie',
+                        source_url: s.source_url || '',
+                        source_title: s.source_title || '',
+                        image_url: s.image_url || null,
+                        key_stats: s.key_stats || [],
+                        relevance_score: s.relevance_score || 50,
+                        status: 'suggestion'
+                    }));
+                    await supabase.createBlogSuggestions(toInsert);
+                    showToast(`${suggestions.length} suggestions trouvees`);
+                } else {
+                    showToast('Aucune nouvelle suggestion trouvee');
+                }
+
+                await loadBlogSuggestions();
+
+            } catch (error) {
+                console.error('[Blog Research] Error:', error);
+                showToast('Erreur recherche: ' + error.message);
+            } finally {
+                blogSearching = false;
+                if (btn) btn.disabled = false;
+                if (overlay) overlay.style.display = 'none';
+                if (list) list.style.display = '';
+            }
+        }
+
+        async function loadBlogSuggestions() {
+            try {
+                blogSuggestions = await supabase.getBlogSuggestions();
+                blogSearches = await supabase.getBlogSearches();
+                renderBlogSuggestions();
+                renderBlogSearchHistory();
+                updateBlogSuggestionCounts();
+            } catch (error) {
+                console.error('[Blog Suggestions] Load error:', error);
+            }
+        }
+
+        function updateBlogSuggestionCounts() {
+            const pending = blogSuggestions.filter(s => s.status === 'suggestion').length;
+            const kpi = document.getElementById('kpi-blog-suggestions');
+            if (kpi) kpi.textContent = pending;
+
+            const tabCount = document.getElementById('blog-tab-suggestions-count');
+            if (tabCount) tabCount.textContent = blogSuggestions.filter(s => s.status !== 'rejected').length;
+
+            const tabArticles = document.getElementById('blog-tab-articles-count');
+            if (tabArticles) tabArticles.textContent = blogArticles.length;
+        }
+
+        function renderBlogSuggestions() {
+            const container = document.getElementById('blog-suggestions-list');
+            if (!container) return;
+
+            const filter = document.getElementById('blog-suggestion-status-filter')?.value || 'all';
+            let items = [...blogSuggestions];
+            if (filter !== 'all') {
+                items = items.filter(s => s.status === filter);
+            }
+
+            if (items.length === 0) {
+                container.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    ${blogSuggestions.length === 0 ? 'Aucune suggestion. Lance une recherche.' : 'Aucune suggestion avec ce filtre.'}
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(s => {
+                const scoreClass = s.relevance_score >= 70 ? 'score-high' : (s.relevance_score >= 40 ? 'score-mid' : 'score-low');
+                const statusBadge = s.status === 'planned' ? '<span style="background: #f59e0b; color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.675rem; font-weight: 600;">PLANIFIE</span>'
+                    : s.status === 'created' ? '<span style="background: var(--green); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.675rem; font-weight: 600;">CREE</span>'
+                    : s.status === 'rejected' ? '<span style="background: var(--red); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.675rem; font-weight: 600;">REJETE</span>'
+                    : '';
+
+                const stats = (s.key_stats || []).map(st => `<span class="suggestion-stat">${st}</span>`).join('');
+
+                let actions = '';
+                if (s.status === 'suggestion') {
+                    actions = `
+                        <button class="suggestion-btn validate" onclick="openPlanModal('${s.id}')">Valider & Planifier</button>
+                        <button class="suggestion-btn reject" onclick="rejectBlogSuggestion('${s.id}')">Rejeter</button>
+                    `;
+                } else if (s.status === 'planned') {
+                    actions = `
+                        <button class="suggestion-btn generate" onclick="generateBlogArticleFromSuggestion('${s.id}')">Generer l'article</button>
+                    `;
+                }
+
+                const plannedInfo = s.planned_date ? `<span style="font-size: 0.75rem; color: #f59e0b;">Publication: ${new Date(s.planned_date).toLocaleDateString('fr-FR')}</span>` : '';
+
+                return `<div class="suggestion-card ${s.status}">
+                    <div class="suggestion-score">
+                        <span class="suggestion-score-value ${scoreClass}">${s.relevance_score || 0}</span>
+                        <span class="suggestion-score-label">score</span>
+                    </div>
+                    <div class="suggestion-body">
+                        <div class="suggestion-meta">
+                            <span style="background: var(--bg-muted); padding: 1px 8px; border-radius: 10px; font-size: 0.675rem; font-weight: 600;">${s.category || 'N/A'}</span>
+                            ${statusBadge}
+                            ${plannedInfo}
+                        </div>
+                        <div class="suggestion-title">${s.suggested_title || s.title}</div>
+                        <div class="suggestion-excerpt">${s.excerpt || ''}</div>
+                        ${stats ? `<div class="suggestion-stats">${stats}</div>` : ''}
+                        <div style="font-size: 0.7rem; color: var(--text-dim);">
+                            Source: ${s.source_title || 'N/A'} ${s.source_url ? `- <a href="${s.source_url}" target="_blank" style="color: var(--accent);">voir</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="suggestion-actions">${actions}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderBlogSearchHistory() {
+            const section = document.getElementById('blog-search-history');
+            const list = document.getElementById('blog-search-history-list');
+            if (!section || !list) return;
+
+            if (blogSearches.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = '';
+            list.innerHTML = blogSearches.slice(0, 5).map(s => `
+                <div class="search-history-item">
+                    <span>${new Date(s.created_at).toLocaleDateString('fr-FR')} - ${s.query}</span>
+                    <span style="font-weight: 500;">${s.results_count} resultats</span>
+                </div>
+            `).join('');
+        }
+
+        function openPlanModal(suggestionId) {
+            const s = blogSuggestions.find(x => x.id === suggestionId);
+            if (!s) return;
+
+            document.getElementById('plan-suggestion-id').value = s.id;
+            document.getElementById('plan-suggestion-title').value = s.suggested_title || s.title;
+            document.getElementById('plan-suggestion-category').value = s.category || 'Technologie';
+
+            // Default date: 7 days from now
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 7);
+            document.getElementById('plan-suggestion-date').value = defaultDate.toISOString().split('T')[0];
+
+            document.getElementById('plan-suggestion-modal').style.display = 'flex';
+        }
+
+        function closePlanModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('plan-suggestion-modal').style.display = 'none';
+        }
+
+        async function confirmPlanSuggestion() {
+            const id = document.getElementById('plan-suggestion-id').value;
+            const title = document.getElementById('plan-suggestion-title').value;
+            const category = document.getElementById('plan-suggestion-category').value;
+            const date = document.getElementById('plan-suggestion-date').value;
+
+            if (!date) {
+                showToast('Date requise');
+                return;
+            }
+
+            try {
+                await supabase.updateBlogSuggestion(id, {
+                    suggested_title: title,
+                    category: category,
+                    planned_date: date,
+                    status: 'planned',
+                    updated_at: new Date().toISOString()
+                });
+
+                closePlanModal();
+                await loadBlogSuggestions();
+                renderCalendar();
+                showToast('Suggestion planifiee');
+            } catch (error) {
+                console.error('[Blog] Plan error:', error);
+                showToast('Erreur planification');
+            }
+        }
+
+        async function rejectBlogSuggestion(id) {
+            try {
+                await supabase.updateBlogSuggestion(id, { status: 'rejected', updated_at: new Date().toISOString() });
+                await loadBlogSuggestions();
+                showToast('Suggestion rejetee');
+            } catch (error) {
+                showToast('Erreur');
+            }
+        }
+
+        async function generateBlogArticleFromSuggestion(suggestionId) {
+            const s = blogSuggestions.find(x => x.id === suggestionId);
+            if (!s) return;
+
+            const btn = event?.target;
+            if (btn) { btn.disabled = true; btn.textContent = 'Generation...'; }
+
+            try {
+                const response = await fetch(`${N8N_WEBHOOK_BASE}/blog-generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ suggestion: s })
+                });
+                const article = await response.json();
+
+                // Format sources (array of {title, url} → text lines)
+                let sourcesText = s.source_url || '';
+                if (article.sources && Array.isArray(article.sources)) {
+                    sourcesText = article.sources.map(src =>
+                        typeof src === 'string' ? src : `${src.title || ''} - ${src.url || ''}`
+                    ).join('\n');
+                }
+
+                // Pre-fill the article form with full generated content
+                editingBlogArticleId = null;
+                document.getElementById('blog-modal-title').textContent = 'Article genere - Verifier & publier';
+                document.getElementById('blog-article-id').value = '';
+                document.getElementById('blog-article-title').value = article.title || s.suggested_title || s.title;
+                document.getElementById('blog-article-slug').value = (article.title || s.suggested_title || s.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                document.getElementById('blog-article-category').value = article.category || s.category || 'Technologie';
+                document.getElementById('blog-article-status').value = 'scheduled';
+                document.getElementById('blog-article-excerpt').value = article.excerpt || s.excerpt || '';
+                document.getElementById('blog-article-content').value = article.content || '';
+                document.getElementById('blog-article-image').value = article.image_url || s.image_url || '';
+                document.getElementById('blog-article-reading-time').value = article.reading_time || 5;
+                document.getElementById('blog-article-featured').checked = false;
+                document.getElementById('blog-article-date').value = s.planned_date || new Date().toISOString().split('T')[0];
+                document.getElementById('blog-article-sources').value = sourcesText;
+                document.getElementById('blog-article-cta-title').value = article.cta_title || 'Pret a transformer votre entreprise ?';
+                document.getElementById('blog-article-cta-text').value = article.cta_text || 'Discutons de votre projet';
+                document.getElementById('blog-article-meta-desc').value = article.meta_description || '';
+
+                // Store suggestion ID for linking after save
+                document.getElementById('blog-article-id').dataset.suggestionId = suggestionId;
+
+                document.getElementById('blog-article-modal').style.display = 'flex';
+                switchBlogTab('articles');
+                const hasImage = article.image_url ? ' + image IA' : '';
+                showToast(`Article complet genere${hasImage} - verifie et sauvegarde`);
+
+            } catch (error) {
+                console.error('[Blog] Generate error:', error);
+                showToast('Erreur generation: ' + error.message);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = 'Generer l\'article'; }
             }
         }
 
@@ -19385,8 +20204,8 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         async function updateNewsletterStats() {
             const total = newsletterCampaigns.length;
-            const scheduled = newsletterCampaigns.filter(c => c.status === 'Scheduled').length;
-            const sent = newsletterCampaigns.filter(c => c.status === 'Sent').length;
+            const scheduled = newsletterCampaigns.filter(c => c.status === 'scheduled').length;
+            const sent = newsletterCampaigns.filter(c => c.status === 'sent').length;
 
             // Fetch subscribers count from Brevo
             let subscribers = 0;
@@ -19416,7 +20235,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             document.getElementById('newsletter-campaign-id').value = '';
             document.getElementById('newsletter-subject').value = '';
             document.getElementById('newsletter-preview-text').value = '';
-            document.getElementById('newsletter-status').value = 'Draft';
+            document.getElementById('newsletter-status').value = 'draft';
             document.getElementById('newsletter-scheduled-date').value = '';
             document.getElementById('newsletter-content-html').value = getDefaultNewsletterTemplate();
 
@@ -19434,7 +20253,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             document.getElementById('newsletter-campaign-id').value = campaignId;
             document.getElementById('newsletter-subject').value = campaign.subject || '';
             document.getElementById('newsletter-preview-text').value = campaign.previewText || '';
-            document.getElementById('newsletter-status').value = campaign.status || 'Draft';
+            document.getElementById('newsletter-status').value = campaign.status || 'draft';
             document.getElementById('newsletter-scheduled-date').value = campaign.scheduledDate ? campaign.scheduledDate.slice(0, 16) : '';
             document.getElementById('newsletter-content-html').value = campaign.contentHtml || getDefaultNewsletterTemplate();
 
