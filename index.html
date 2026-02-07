@@ -19391,12 +19391,18 @@ Reponds UNIQUEMENT avec le texte du post.`;
                         if (pendingNewConversations.has(senderId)) return;
                         pendingNewConversations.add(senderId);
                         try {
-                            // Chercher le nom dans les prospects Supabase (single row)
+                            // Chercher le prospect dans Supabase (single row avec champs CRM)
                             let prospectName = 'Nouvel utilisateur';
+                            let prospectData = null;
                             try {
-                                const prospectResults = await supabase.select('messenger_prospects', { sender_id: `eq.${senderId}` }, { limit: 1, select: 'name,sender_id' });
-                                if (prospectResults.length > 0 && prospectResults[0].name) {
-                                    prospectName = prospectResults[0].name;
+                                const prospectResults = await supabase.select('messenger_prospects', { sender_id: `eq.${senderId}` }, { limit: 1, select: 'name,sender_id,company,sector,temperature,qualification_score,conversation_stage,phone,email,total_messages' });
+                                if (prospectResults.length > 0) {
+                                    prospectData = prospectResults[0];
+                                    if (prospectData.name) {
+                                        prospectName = prospectData.name;
+                                    } else if (senderId) {
+                                        prospectName = `Messenger #${senderId.slice(-4)}`;
+                                    }
                                 } else if (senderId) {
                                     prospectName = `Messenger #${senderId.slice(-4)}`;
                                 }
@@ -19406,12 +19412,20 @@ Reponds UNIQUEMENT avec le texte du post.`;
                             // Re-verifier apres l'await (un autre callback a pu creer la conv entre temps)
                             conv = messengerConversations.find(c => c.senderId === senderId);
                             if (!conv) {
+                                const p = prospectData || {};
                                 conv = {
                                     senderId: senderId,
                                     userName: prospectName,
                                     messages: [],
                                     lastMessage: null,
-                                    unreadCount: 0
+                                    unreadCount: 0,
+                                    company: p.company || null,
+                                    sector: p.sector || null,
+                                    temperature: p.temperature || null,
+                                    qualificationScore: p.qualification_score || 0,
+                                    conversationStage: p.conversation_stage || null,
+                                    phone: p.phone || null,
+                                    email: p.email || null
                                 };
                                 messengerConversations.unshift(conv);
                                 allMessengerConversations.unshift(conv);
@@ -19586,7 +19600,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
         function selectConversation(senderId) {
             currentConversationId = senderId;
-            const conv = messengerConversations.find(c => c.senderId === senderId);
+            const conv = allMessengerConversations.find(c => c.senderId === senderId);
             if (!conv) return;
 
             // Update UI
@@ -19738,7 +19752,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
                 renderConversationsList();
                 updateNavMessagesCount();
-                addNotification('info', 'Conversation marquee comme lue');
+                addNotification({ type: 'info', title: 'Conversation marquee comme lue' });
 
             } catch (error) {
                 console.error('[Messages] Error marking as read:', error);
@@ -19759,7 +19773,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 conv.unreadCount = conv.messages.filter(m => m.role === 'user' && !m.read).length;
                 renderConversationsList();
                 updateNavMessagesCount();
-                addNotification('info', 'Conversation marquee comme non lue');
+                addNotification({ type: 'info', title: 'Conversation marquee comme non lue' });
             } catch (error) {
                 console.error('[Messages] Error marking as unread:', error);
             }
@@ -19783,10 +19797,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 renderConversationsList();
                 updateMessagesKPIs();
                 updateNavMessagesCount();
-                addNotification('success', 'Conversation archivee');
+                addNotification({ type: 'success', title: 'Conversation archivee' });
             } catch (error) {
                 console.error('[Messages] Archive error:', error);
-                addNotification('error', 'Erreur archivage: ' + error.message);
+                addNotification({ type: 'error', title: 'Erreur archivage', desc: error.message });
             }
         }
 
@@ -19800,7 +19814,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 currentMessagesFilter = 'all';
                 document.getElementById('messages-filter').value = 'all';
                 await loadMessengerConversations();
-                addNotification('success', 'Conversation restauree');
+                addNotification({ type: 'success', title: 'Conversation restauree' });
             } catch (error) {
                 console.error('[Messages] Unarchive error:', error);
             }
@@ -19834,9 +19848,9 @@ Reponds UNIQUEMENT avec le texte du post.`;
             btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Sync...';
             try {
                 await loadMessengerConversations();
-                addNotification('success', 'Messages synchronises');
+                addNotification({ type: 'success', title: 'Messages synchronises' });
             } catch (e) {
-                addNotification('error', 'Erreur sync: ' + e.message);
+                addNotification({ type: 'error', title: 'Erreur sync', desc: e.message });
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalHTML;
@@ -19875,7 +19889,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
                 // 3. Update UI
                 input.value = '';
-                addNotification('success', 'Reponse envoyee');
+                addNotification({ type: 'success', title: 'Reponse envoyee' });
 
                 // Reload conversations
                 await loadMessengerConversations();
@@ -19883,7 +19897,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
             } catch (error) {
                 console.error('[Messages] Error sending reply:', error);
-                addNotification('error', 'Erreur envoi: ' + error.message);
+                addNotification({ type: 'error', title: 'Erreur envoi', desc: error.message });
             }
         }
 
@@ -19918,11 +19932,11 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 // 4. Update UI
                 document.getElementById('escalation-banner').style.display = 'none';
                 renderConversationsList();
-                addNotification('success', 'Escalade marquee comme traitee');
+                addNotification({ type: 'success', title: 'Escalade marquee comme traitee' });
 
             } catch (error) {
                 console.error('[Messages] Error resolving escalation:', error);
-                addNotification('error', 'Erreur: ' + error.message);
+                addNotification({ type: 'error', title: 'Erreur', desc: error.message });
             }
         }
 
@@ -22469,6 +22483,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 html += '<div id="veille-ao-analysis-section">';
                 if (item.aiAnalysis) {
                     html += renderVeilleAnalysis(item.aiAnalysis);
+                } else if (item._analysisInProgress) {
+                    html += '<button class="veille-analyze-btn" id="veille-analyze-btn" disabled>' +
+                        '<div class="spinner"></div> Analyse en cours...' +
+                    '</button>';
                 } else {
                     html += '<button class="veille-analyze-btn" id="veille-analyze-btn" onclick="generateAOAnalysis(\'' + item.id + '\')">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M8 6a4 4 0 0 1 8 0"/><path d="M17 12.5c1.77.77 3 2.53 3 4.5a5 5 0 0 1-10 0c0-1.97 1.23-3.73 3-4.5"/><path d="M7 12.5C5.23 13.27 4 15.03 4 17a5 5 0 0 0 10 0"/></svg>' +
@@ -22575,6 +22593,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
             var ao = veilleAppelsOffres.find(function(a) { return a.id === aoId; });
             if (!ao) { showToast('AO non trouve'); return; }
+            ao._analysisInProgress = true;
 
             var claudeKey = getClaudeApiKey();
             if (!claudeKey) {
@@ -22649,7 +22668,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
                 // Update local data
                 var localAo = veilleAppelsOffres.find(function(a) { return a.id === aoId; });
-                if (localAo) localAo.aiAnalysis = analysis;
+                if (localAo) {
+                    localAo.aiAnalysis = analysis;
+                    localAo._analysisInProgress = false;
+                }
 
                 // Render in modal
                 var section = document.getElementById('veille-ao-analysis-section');
@@ -22659,6 +22681,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
 
             } catch (error) {
                 console.error('[Veille] AI Analysis error:', error);
+                ao._analysisInProgress = false;
                 showToast('Erreur analyse IA: ' + error.message);
                 if (btn) {
                     btn.disabled = false;
