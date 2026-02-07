@@ -10045,6 +10045,9 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             // 3. Charger les données depuis Supabase (avant vérification clé Claude)
             await loadDataFromSupabase();
 
+            // 3b. Charger les articles blog en arriere-plan (pour le calendrier)
+            loadBlogArticles().catch(err => console.warn('[Blog] Init load failed:', err));
+
             // 4. Clés API Claude (optionnel - MANA peut fonctionner via n8n)
             // Modal de config supprimé - configuration via console si nécessaire
 
@@ -10117,7 +10120,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                             if (!exists) {
                                 prospects.push({
                                     id: mp.id,
-                                    name: mp.name || 'Visiteur',
+                                    name: mp.name || mp.first_name || (mp.sender_id ? `Messenger #${mp.sender_id.slice(-4)}` : 'Visiteur'),
                                     company: mp.company || '',
                                     sector: mp.sector || 'Non defini',
                                     status: stageMap[mp.conversation_stage] || 'lead',
@@ -11762,6 +11765,11 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                      onclick="quickAssignProspect('${prospectId}', null)">
                     Retirer assignation
                 </div>
+                <div style="border-top:1px solid var(--border);margin-top:2px;padding:6px 10px;cursor:pointer;font-size:0.8rem;border-radius:4px;color:var(--red);"
+                     onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background=''"
+                     onclick="deleteProspectFromMenu('${prospectId}')">
+                    Supprimer
+                </div>
             `;
 
             menu.style.left = Math.min(event.clientX, window.innerWidth - 200) + 'px';
@@ -11777,6 +11785,29 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
         function closeContextMenu() {
             const menu = document.getElementById('prospect-context-menu');
             if (menu) menu.style.display = 'none';
+        }
+
+        async function deleteProspectFromMenu(prospectId) {
+            closeContextMenu();
+            const prospect = prospects.find(p => p.id === prospectId);
+            if (!prospect) return;
+            if (!confirm(`Supprimer "${prospect.company || prospect.name}" ?`)) return;
+            try {
+                const deleteId = prospect.supabaseId || prospect.id;
+                if (prospect.source === 'messenger') {
+                    await supabase.delete('messenger_prospects', deleteId);
+                } else {
+                    await supabase.deleteProspect(deleteId);
+                }
+                prospects = prospects.filter(p => p.id !== prospectId);
+                renderProspectsViews();
+                renderPipeline();
+                renderStats();
+                showToast('Prospect supprime');
+            } catch (err) {
+                console.error('[Delete] Error:', err);
+                showToast('Erreur suppression');
+            }
         }
 
         async function quickAssignProspect(prospectId, memberId) {
@@ -12109,12 +12140,13 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
                 return `<div class="grid-card ${p.priority || 'froid'} ${hasAssets ? 'has-assets' : ''}" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="grid-card-header">
-                        <div class="grid-card-company">${p.company}</div>
-                        ${p.source !== 'manual' ? `<span class="badge ${p.source === 'messenger' ? 'messenger-src' : 'landing-src'}" style="font-size:10px;padding:2px 6px;">${sourceLabel(p.source)}</span>` : ''}
+                        <div class="grid-card-company">${prospectDisplayName(p)}</div>
+                        ${isAutoProspect(p) ? sourceBadge(p.source) : ''}
                         <span class="grid-card-badge ${p.priority || 'froid'}">${priorityLabel(p.priority)}</span>
                         <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
                     <div class="grid-card-info">
+                        ${isAutoProspect(p) && p.company ? `<div class="grid-card-row"><span>Entreprise</span><strong>${p.company}</strong></div>` : ''}
                         ${p.contact || p.name ? `<div class="grid-card-row"><span>Contact</span><strong>${p.contact || p.name}</strong></div>` : ''}
                         <div class="grid-card-row"><span>Secteur</span><strong>${p.sector || '-'}</strong></div>
                         <div class="grid-card-row"><span>Status</span><strong>${statusLabel(p.status)}</strong></div>
@@ -12169,7 +12201,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
 
                 return `<div class="compact-row" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="avatar" style="background:${color}">${initials}</div>
-                    <div class="compact-company">${p.company}</div>
+                    <div class="compact-company">${prospectDisplayName(p)}</div>
                     <div class="compact-source">${sourceBadge(p.source)}</div>
                     <div class="compact-sector">${p.sector || '-'}</div>
                     <div class="compact-status">${statusLabel(p.status)}</div>
@@ -12235,7 +12267,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                      onclick="openProspectDetail('${p.id}')"
                      oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="kanban-card-header">
-                        <span class="kanban-card-company">${p.company}${renderAssetIcons(p.assets)}</span>
+                        <span class="kanban-card-company">${prospectDisplayName(p)}${isAutoProspect(p) ? ' ' + sourceBadge(p.source) : ''}${renderAssetIcons(p.assets)}</span>
                         <span class="kanban-card-status badge ${p.status}">${statusLabel(p.status)}</span>
                         <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
@@ -18228,7 +18260,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             }
         });
 
-        function contextMenuAction(action) {
+        async function contextMenuAction(action) {
             if (!contextMenuProspectId) return;
             const prospect = prospects.find(p => p.id === contextMenuProspectId);
             if (!prospect) return;
@@ -18271,6 +18303,26 @@ Reponds UNIQUEMENT avec le texte du post.`;
                     break;
                 case 'open-detail':
                     openProspectDetail(prospect.id);
+                    break;
+                case 'delete-prospect':
+                    if (confirm(`Supprimer "${prospect.company || prospect.name}" ? Cette action est irreversible.`)) {
+                        try {
+                            const deleteId = prospect.supabaseId || prospect.id;
+                            if (prospect.source === 'messenger') {
+                                await supabase.delete('messenger_prospects', deleteId);
+                            } else {
+                                await supabase.deleteProspect(deleteId);
+                            }
+                            prospects = prospects.filter(p => p.id !== prospect.id);
+                            renderProspectsViews();
+                            renderPipeline();
+                            renderStats();
+                            showToast(`"${prospect.company || prospect.name}" supprime`);
+                        } catch (err) {
+                            console.error('[Delete] Error:', err);
+                            showToast('Erreur: ' + (err.message || 'Suppression echouee'));
+                        }
+                    }
                     break;
             }
         }
@@ -18762,7 +18814,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
             if (name === 'analytics') {
                 renderAnalyticsView();
             }
-            if (name === 'blog') {
+            if (name === 'blog' && blogArticles.length === 0) {
                 loadBlogArticles();
             }
             if (name === 'newsletter') {
@@ -18802,7 +18854,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 const prospectsMap = new Map();
                 prospects.forEach(p => {
                     prospectsMap.set(p.sender_id, {
-                        name: p.name || p.first_name || 'Utilisateur',
+                        name: p.name || p.first_name || (p.sender_id ? `Messenger #${p.sender_id.slice(-4)}` : 'Utilisateur'),
                         profilePic: p.profile_pic,
                         requiresHuman: p.requires_human_intervention || false
                     });
@@ -19643,6 +19695,7 @@ Reponds UNIQUEMENT avec le texte du post.`;
                 renderBlogArticles();
                 updateBlogStats();
                 loadBlogSuggestions();
+                if (typeof renderCalendar === 'function') renderCalendar();
                 if (blogArticles.length > 0) {
                     showToast(`${blogArticles.length} articles charges`);
                 }
@@ -20867,6 +20920,11 @@ Reponds UNIQUEMENT avec le texte du post.`;
         <div class="context-menu-item" onclick="contextMenuAction('open-detail')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             Voir les details
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item danger" onclick="contextMenuAction('delete-prospect')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Supprimer le prospect
         </div>
     </div>
 
