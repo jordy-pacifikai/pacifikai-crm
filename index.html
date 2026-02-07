@@ -21969,6 +21969,10 @@ Reponds UNIQUEMENT avec le texte du post.`;
             if (/\d{13,}/.test(url)) return false;
             if (url.includes('Date.now()')) return false;
             if (url === '#' || url === '') return false;
+            // Detect test IDs (ao001-ao999, pf001-pf999)
+            if (/[?/](ao|pf)\d{3}$/.test(url)) return false;
+            // Must start with http(s)
+            if (!/^https?:\/\//.test(url)) return false;
             return true;
         }
 
