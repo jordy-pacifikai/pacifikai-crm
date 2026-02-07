@@ -1466,6 +1466,7 @@
         .badge.tiede { background: var(--yellow-glow); color: var(--yellow); }
         .badge.froid { background: var(--accent-glow); color: var(--accent); }
         .badge.messenger-src { background: #0084FF22; color: #0084FF; }
+        .badge.landing-src { background: #10b98122; color: #10b981; }
         .badge.manual-src { background: var(--bg-muted); color: var(--text-dim); }
 
         .pipeline-card-priority {
@@ -7070,6 +7071,7 @@
                                     <div class="dropdown-item" onclick="setSourceFilter('all')">Toutes sources</div>
                                     <div class="dropdown-divider"></div>
                                     <div class="dropdown-item" onclick="setSourceFilter('messenger')">Messenger</div>
+                                    <div class="dropdown-item" onclick="setSourceFilter('landing-page')">Landing Page</div>
                                     <div class="dropdown-item" onclick="setSourceFilter('manual')">Manuel</div>
                                 </div>
                             </div>
@@ -10089,7 +10091,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                                     value: 0,
                                     date: (mp.first_contact_at || mp.created_at || '').split('T')[0],
                                     priority: tempMap[mp.temperature] || 'froid',
-                                    source: 'messenger',
+                                    source: mp.source || 'messenger',
                                     messenger_sender_id: mp.sender_id,
                                     email: mp.email || '',
                                     phone: mp.phone || '',
@@ -10679,7 +10681,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                         </div>
                     </td>
                     <td>${p.name || '-'}</td>
-                    <td>${p.source === 'messenger' ? '<span class="badge messenger-src">Messenger</span>' : '<span class="badge manual-src">Manuel</span>'}</td>
+                    <td>${sourceBadge(p.source)}</td>
                     <td>${p.sector}</td>
                     <td><span class="badge ${p.status}"><span class="badge-dot"></span>${statusLabel(p.status)}</span></td>
                     <td>${fmtXPF(p.value)}</td>
@@ -11516,9 +11518,19 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             toggleDropdown('status-dropdown');
         }
 
+        function sourceBadge(source) {
+            if (source === 'messenger') return '<span class="badge messenger-src">Messenger</span>';
+            if (source === 'landing-page') return '<span class="badge landing-src">Landing Page</span>';
+            return '<span class="badge manual-src">Manuel</span>';
+        }
+        function sourceLabel(source) {
+            const labels = { all: 'Toutes sources', messenger: 'Messenger', 'landing-page': 'Landing Page', manual: 'Manuel' };
+            return labels[source] || 'Manuel';
+        }
+
         function setSourceFilter(source) {
             currentSourceFilter = source;
-            document.getElementById('source-filter-label').textContent = source === 'all' ? 'Toutes sources' : (source === 'messenger' ? 'Messenger' : 'Manuel');
+            document.getElementById('source-filter-label').textContent = sourceLabel(source);
             renderProspectsViews();
             toggleDropdown('source-dropdown');
         }
@@ -11739,7 +11751,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
             if (assetsFilterActive) tags.push({ label: 'Avec assets', clear: () => toggleAssetsFilter() });
             if (currentAssigneeFilter !== 'all') tags.push({ label: `Assigne: ${currentAssigneeFilter === 'unassigned' ? 'Non assigne' : getMemberName(currentAssigneeFilter)}`, clear: () => setAssigneeFilter('all') });
             if (currentDateFilter !== 'all') tags.push({ label: `Date: ${currentDateFilter}`, clear: () => setDateFilter('all') });
-            if (currentSourceFilter !== 'all') tags.push({ label: `Source: ${currentSourceFilter === 'messenger' ? 'Messenger' : 'Manuel'}`, clear: () => setSourceFilter('all') });
+            if (currentSourceFilter !== 'all') tags.push({ label: `Source: ${sourceLabel(currentSourceFilter)}`, clear: () => setSourceFilter('all') });
 
             if (tags.length === 0) { container.innerHTML = ''; return; }
 
@@ -11795,7 +11807,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 p.phone || '',
                 p.poste || '',
                 p.sector || '',
-                p.source === 'messenger' ? 'Messenger' : 'Manuel',
+                sourceLabel(p.source),
                 statusLabel(p.status) || '',
                 priorityLabel(p.priority) || '',
                 p.value || 0,
@@ -12008,7 +12020,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return `<div class="grid-card ${p.priority || 'froid'} ${hasAssets ? 'has-assets' : ''}" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="grid-card-header">
                         <div class="grid-card-company">${p.company}</div>
-                        ${p.source === 'messenger' ? '<span class="badge messenger-src" style="font-size:10px;padding:2px 6px;">Messenger</span>' : ''}
+                        ${p.source !== 'manual' ? `<span class="badge ${p.source === 'messenger' ? 'messenger-src' : 'landing-src'}" style="font-size:10px;padding:2px 6px;">${sourceLabel(p.source)}</span>` : ''}
                         <span class="grid-card-badge ${p.priority || 'froid'}">${priorityLabel(p.priority)}</span>
                         <button class="prospect-menu-btn" onclick="event.stopPropagation(); showContextMenu(event, '${p.id}')" title="Actions">⋮</button>
                     </div>
@@ -12064,7 +12076,7 @@ IMPORTANT: JSON uniquement, pas de texte autour.`
                 return `<div class="compact-row" onclick="showProspectModal('${p.id}')" oncontextmenu="showProspectContextMenu(event, '${p.id}')">
                     <div class="avatar" style="background:${color}">${initials}</div>
                     <div class="compact-company">${p.company}</div>
-                    <div class="compact-source">${p.source === 'messenger' ? '<span class="badge messenger-src">Messenger</span>' : '<span class="badge manual-src">Manuel</span>'}</div>
+                    <div class="compact-source">${sourceBadge(p.source)}</div>
                     <div class="compact-sector">${p.sector || '-'}</div>
                     <div class="compact-status">${statusLabel(p.status)}</div>
                     <div class="compact-value">${fmtXPF(p.value)}</div>
