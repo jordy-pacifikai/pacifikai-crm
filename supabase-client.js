@@ -539,7 +539,7 @@ class SupabaseClient {
                 SUPABASE_URL,
                 SUPABASE_ANON_KEY
             );
-            console.log('[Realtime] Client initialise');
+            // Realtime client ready
         } else {
             console.error('[Realtime] SDK Supabase non disponible');
         }
@@ -560,7 +560,6 @@ class SupabaseClient {
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'messenger_messages' },
                 (payload) => {
-                    console.log('[Realtime] Nouveau message:', payload.new);
                     if (onInsert) onInsert(payload.new);
                 }
             )
@@ -568,12 +567,10 @@ class SupabaseClient {
                 'postgres_changes',
                 { event: 'UPDATE', schema: 'public', table: 'messenger_messages' },
                 (payload) => {
-                    console.log('[Realtime] Message mis a jour:', payload.new);
                     if (onUpdate) onUpdate(payload.new);
                 }
             )
             .subscribe((status) => {
-                console.log('[Realtime] Status:', status);
             });
 
         return this._messengerChannel;
@@ -584,7 +581,6 @@ class SupabaseClient {
         if (this._messengerChannel) {
             this._messengerChannel.unsubscribe();
             this._messengerChannel = null;
-            console.log('[Realtime] Desouscrit');
         }
     }
 
